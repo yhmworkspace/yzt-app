@@ -1,0 +1,32 @@
+
+<script type="text/javascript">
+$(function(){
+	 $('#collectedlist').datagrid({
+		url:'choicenesscontent/show/${yztChoicenesscontentId}',
+		onClickRow:function(rowIndex,row){
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			$('#archiveadd').window('open').dialog('setTitle', '用户列表');
+			$('#archiveadd').window('refresh','admin/zjzx/view/'+row.id);
+		},
+	});
+});
+
+</script>
+
+<table id="collectedlist" style=""
+	data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'asc'">
+	<thead>
+		<tr>
+			<th data-options=" field:'yztUserinfoNickname',width:100,align:'center',halign:'center',sortable:true">用户昵称</th>
+		    <th data-options=" field:'yztUserinfoAccount',width:100,align:'center',halign:'center',sortable:true">用户账号</th> 
+		</tr>
+	</thead>
+</table>
+
+
+
+
+

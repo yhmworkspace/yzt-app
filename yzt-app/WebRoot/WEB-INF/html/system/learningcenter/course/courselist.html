@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+#include("../../common/header.html")
+
+<script type="text/javascript">
+$(function(){
+	$('#archivelist').datagrid({
+		url:'system/learningcenter/course/listjson/${learningcenterId}',
+		onClickRow:function(rowIndex,row){
+			/*单机
+				$.messager.show({
+		            title: "提示",
+		            msg: row.maintitle
+		        });
+			*/
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			//$('#archiveadd').window('refresh','system/learningcenter/course/view/'+row.id);
+			 //openWindow("system/learningcenter/course/view/"+row.id);
+			
+		}
+		//remoteFilter:true
+	});
+	//$('#archivelist').datagrid('enableFilter');
+});
+
+function addCourse(archivelist){
+	var categoryid = $('#category_id').val();
+	
+	$('#ff_course').form('clear');
+	 	
+	$('#archiveadd').window('open').dialog('setTitle', '增加');
+	 
+	//openWindow(path);
+}
+
+
+function sub_Form(ff){
+	var userurl = "system/learningcenter/course/save/${learningcenterId}";
+	
+    $('#'+ff).form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+		    $('#archiveadd').window('close')
+		  //var rs = eval('('+ r +')');    
+	    	//console.info(rs);
+	        $('#archivelist').datagrid('reload'); 
+	    }    
+	});     
+}
+
+function editCourse(archivelist){
+	var categoryid = $('#category_id').val();
+	var rows = $('#'+archivelist).datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+		 var row = $('#'+archivelist).datagrid('getSelected');
+		  $('#archiveadd').window('open').dialog('setTitle', '修改');
+		  $('#ff_course').form('load',row);
+		 //openWindow('system/'+categoryid+'/edit/'+row.id);
+	 }
+}
+
+//删除
+function removeCourse(archivelist){
+	 var rows = $('#'+archivelist).datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length > 0){
+		 var categoryid = $('#category_id').val();
+		 $.messager.confirm('确认', '确定删除当前'+rows.length+'条数据?', function(re) {
+	            if (re) {
+	            	var ids = [];
+	                for (var i = 0; i < rows.length; i++) {
+	                    ids.push(rows[i].id);
+	                }               
+	                $.post('system/'+categoryid+'/delete/${learningcenterId}', {ids: ids.join(',')}, function(r) {
+	                    if (r.success) {
+	                        $.messager.show({// show error message
+	                            title: '提示',
+	                            msg: r.msg
+	                        });
+	                        $('#'+archivelist).datagrid('reload');    // reload the user data
+	                    } else {
+	                        $.messager.show({// show error message
+	                            title: 'Error',
+	                            msg: r.msg
+	                        });
+	                    }
+	                }, 'json');
+	            }
+	        });
+	 }
+}
+
+function showSubPic(value,row,index){
+		//openWindow("ar	chive/originalhtml/${is_category_id}/"+row.id);
+		var category_id = $('#category_id').val();
+		return "<a href=\"javacript:void(0);\" onclick=\"openWindow('system/"+category_id+"/pic/html/${learningcenterId}/"+row.id+"');\"> "+value+" </a>";
+	}
+	function showSubVideo(value,row,index){
+		//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+		var category_id = $('#category_id').val();
+		return "<a href=\"javacript:void(0);\" onclick=\"openWindow('system/"+category_id+"/video/html/${learningcenterId}/"+row.id+"');\"> "+value+" </a>";
+	}
+	
+	function showSubCourse(value,row,index){
+		//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+		var category_id = $('#category_id').val();
+		return "<a href=\"javacript:void(0);\" onclick=\"openSubCourse('system/"+category_id+"/subcourse/html/${learningcenterId}/"+row.id+"');\"> "+value+" </a>";
+	}
+	
+	function openSubCourse(url){
+		//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+		var category_id = $('#category_id').val();
+		//return "<a href=\"javacript:void(0);\" onclick=\"openWindow('system/"+category_id+"/course/html/${learningcenterId}/"+row.id+"');\">"+value+"</a>";
+		var row = $('#archivelist').datagrid('getSelected');
+		
+			
+			$('#subCourse').window('open').dialog('setTitle', '显示数据');
+			 if(row !=null){
+				 $('#subCourse').window('refresh',url);
+			 }else{
+			  $('#subCourse').window('refresh',url);
+				 //$('#subCourse').window('refresh','system/'+categoryid+'/add');
+			 }
+			//$.messager.alert("",categoryid);
+		
+	
+	}
+	
+	
+	function archiveClose1(){
+		$('#archiveadd').window('close');
+	}
+	
+	
+</script>
+
+</head>
+<body>
+<input type="hidden" id="category_id" name="category_id" value="learningcenter/course"></input> 
+<table id="archivelist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar',nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'name',width:150,align:'center',halign:'center',sortable:true">名称</th>
+				<th data-options=" field:'age',width:150,align:'center',halign:'center',sortable:true">年龄段</th>
+				<th data-options=" field:'courseCount',width:60,align:'center',halign:'center',sortable:true,formatter: showSubCourse">子课程</th>
+				<th data-options=" field:'createtime',width:150,align:'center',halign:'center',sortable:true,formatter:cellDate">创建时间</th>
+				<th data-options=" field:'picCount',width:60,align:'center',halign:'center',sortable:true,formatter: showSubPic">图片</th>
+				<th data-options=" field:'videoCount',width:60,align:'center',halign:'center',sortable:true,formatter: showSubVideo">视频</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="addCourse('archivelist');">增加</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"  onclick="editCourse('archivelist')">修改</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="removeCourse('archivelist')">删除</a>
+			#--
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="moveDictionary('up')">上移</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="moveDictionary('dn')">下移</a>
+			--#
+		</div>
+	</div>
+	
+	<div id="archiveadd" class="easyui-window"  style="width:700px;height:500px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	        
+	   <form id="ff_course" action="" method="post">
+		<table cellpadding="5">
+		<input type="hidden"  name="id" value=""/>
+          <tr>
+	        <td class="in-lab">名称：</td><td class="in-ctt"><input  name="name" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td class="in-lab">年龄段：</td><td class="in-ctt"><input class="easyui-textbox" name="age"  value=""></input>
+	        		
+	      </tr>
+	       <tr>
+                    <td class="in-lab" width="100px">类别:</td>
+                    <td class="in-ctt" >
+	                    <input  name="isType" class="easyui-combobox" style="width:70px;" data-options="    
+						        valueField: 'dicCode',    
+						        textField: 'dicName',    
+						        url: 'system/dictionary/list/4'"   
+						        />   
+       	 	</td>
+        </tr>
+	      <tr>
+	        <td class="in-lab">课程介绍：</td><td class="in-ctt"><input  name="introduction" class="easyui-textbox" data-options="multiline:true" style="width:300px;height:60px"  value=""></input> </td>
+	      </tr>
+	      
+	      <tr><td >  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="sub_Form('ff_course')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('ff_course')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form>
+	        
+	</div>
+	
+	<div id="subCourse" class="easyui-window"  style="width:600px;height:500px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	        
+	</div>
+</body>
+</html>

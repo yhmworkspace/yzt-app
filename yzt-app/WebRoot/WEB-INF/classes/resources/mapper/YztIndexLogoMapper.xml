@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztIndexLogoMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztIndexLogo">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="keyword" jdbcType="VARCHAR" property="keyword" />
+    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+  </resultMap>
+  
+  <!-- 修改,SQL更新 -->
+	<update id="updateBySql" parameterType="java.lang.String" >
+		 update yzt_index_logo  ${sql}
+	</update>
+</mapper>

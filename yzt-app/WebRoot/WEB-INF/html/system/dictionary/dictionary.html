@@ -1,0 +1,229 @@
+<script type="text/javascript">
+
+	$(function(){
+		// 实例化树菜单
+		$("#dictionarytree").tree({
+			onClick:function(node){
+				//targetCenter(node.id,node.item_type);
+				$('#dictionarydg').datagrid({
+					url:'system/dictionary/listjson/'+node.id
+				});
+			}
+		});
+		
+		function targetCenter(id,is_type){
+			alert(id);
+			$("#dictionaryCenter").panel({
+					//title:"other title",
+					href:"system/dictionary/list/"+id
+	    	});
+		}
+		
+	})
+	
+var url;
+var type;
+function addDictionary() {
+	var node = $('#dictionarytree').tree('getSelected');
+    $('#dictionaryDlg').dialog('open').dialog('setTitle', '新增');
+    $('#dictionaryfm').form('clear');
+    if(node==null) {
+    	 url = "system/dictionary/save/0";
+    }else{
+    	 url = "system/dictionary/save/"+node.id;
+    }
+	type = "add";   
+}
+
+function editDictionary(){
+	var row = $('#dictionarydg').datagrid('getSelected');
+	//var node = $('#unittree').tree('getSelected');
+	if (row) {
+	    $('#dictionaryDlg').dialog('open').dialog('setTitle', '修改字典');
+	    $('#dictionaryfm').form('load', row);
+	}
+	url = "system/dictionary/update/"+ row.id;
+	type = "update";
+}
+
+function removeDictionary(){
+	var row = $('#dictionarydg').datagrid('getSelected');
+	//var node = $('#unittree').tree('getSelected');
+	if (row) {
+		url = "system/dictionary/delete/"+ row.id;
+		type = "remove";
+		saveDictionary();
+	}else{
+		$.messager.alert("提示","请选择要删除的数据");
+	}
+	
+}
+
+function saveDictionary() {
+	//var unitnode = $('#unittree').tree('getSelected');
+	//console.info("-----------1");
+	$('#dictionaryfm').form('submit', {    
+	    url:url,    
+	    //onSubmit: function(){},
+	    success:function(r){  
+	    	console.info("-----------"+r);
+	    	var rs = eval('(' + r + ')'); 
+	    	$.messager.show({
+                title: "提示",
+                msg: rs.msg
+            });
+	    	$('#dictionarydg').datagrid('reload');
+	    	//$('#dictionaryDlg').dialog('close');
+	    	if(type=="add"){
+		    	/* 追加若干个节点并选中他们*/
+		    	var selected = $('#dictionarytree').tree('getSelected');
+		    	var target = null;
+	   			if(selected !=null){
+	   	    		target =  selected.target;
+	   	    	}
+				/*
+		    	var ico;
+		    	if(rs.obj.dic_type==0){
+		    		ico = "tree-folderp"
+		    	}else{
+		    		ico = "tree-filep";
+		    	}
+		    	*/
+		    	$('#dictionarytree').tree('append', {
+		    		parent: target,
+		    		data: [{
+		    			id: rs.obj.id,
+		    			text: rs.obj.dicName
+		    			/*
+		    			iconCls: ico,
+		    			item_type:rs.obj.dic_type
+		    			*/
+		    		}]
+		    	});
+	    	
+	    	}else if(type=="update"){
+	    		var node = $('#dictionarytree').tree('find', rs.obj.id);
+	    		if (node){
+	    			$('#dictionarytree').tree('update', {
+	    				target: node.target,
+	    				text: rs.obj.dicName
+	    			});
+	    		}
+	    	}else if(type=="remove"){
+	    		var node = $('#dictionarytree').tree('find', rs.obj.id);
+	    		if (node){
+		    		$('#dictionarytree').tree('remove',node.target);
+	    		}
+	    	}
+	    }    
+	});
+}
+
+function moveDictionary(updn){
+	var row = $('#dictionarydg').datagrid('getSelected');
+	if(row){
+		if(row.dic_sequence==1){
+			$.messager.alert("提示","已经是第一个");
+    		return false;
+		}
+	
+		$('#dictionaryfm').form('submit',{
+		    url:"system/dictionary/move/"+updn+"/"+row.dicPid+"/"+row.id+"/"+row.dicSequence,
+		    onSubmit: function(){},
+		    success: function(rs){
+		    	$('#dictionarydg').datagrid('reload');//$('#inputcardmanage').panel('refresh', 'manage/categoryinputcardhtml/${category_id}?field_id='+rs.obj.id+'&field_seq='+rs.obj.is_sequence);
+		    }
+		});
+	}else{
+		$.messager.alert("提示","请选择一条数据");
+	}
+	
+}
+
+
+	</script>
+<div id="cc" class="easyui-layout" data-options="fit:true">
+	<div
+		data-options="region:'west',title:'字典树',split:true,tools:'#dictool'"
+		style="width: 250px;">
+
+		<div style="overflow: auto; padding: 10px;">
+			<ul id="dictionarytree"
+				data-options="url:'system/dictionary/treejson/0',animate:true,lines:true"></ul>
+		</div>
+		<div id="dictool">
+			<a href="javascript:void(0)" class="icon-add"
+				onclick="javascript:addDictionary()"></a> <a
+				href="javascript:void(0)" class="icon-edit"
+				onclick="javascript:editDictionary()"></a> <a
+				href="javascript:void(0)" class="icon-remove"
+				onclick="javascript:alert('删除')"></a>
+
+		</div>
+	</div>
+	<div data-options="region:'center'" id="dictionaryCenter">
+		<table id="dictionarydg" class="easyui-datagrid" title="" fit="true"
+			style="width: 705px; height: 250px"
+			data-options="rownumbers:true,idField:'id',singleSelect:true,pagination:true,
+						url:'system/dictionary/list/0',toolbar:'#toolbar',nowrap:false">
+			<thead>
+				<tr>
+					<th data-options="field:'ck',checkbox:true"></th>
+					<th
+						data-options=" field:'dicName',width:150,align:'center',halign:'center',sortable:true">字典名称</th>
+					<th
+						data-options=" field:'dicCode',width:150,align:'center',halign:'center'">字典代码</th>
+
+				</tr>
+			</thead>
+		</table>
+	</div>
+	<div id="toolbar" style="padding: 3px; height: auto">
+		<div style="margin-bottom: 5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				iconCls="icon-add" plain="true" onclick="addDictionary()">增加</a> <a
+				href="javascript:void(0)" class="easyui-linkbutton"
+				iconCls="icon-edit" plain="true" onclick="editDictionary()">修改</a> <a
+				href="javascript:void(0)" class="easyui-linkbutton"
+				iconCls="icon-remove" plain="true" onclick="removeDictionary()">删除</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				iconCls="icon-ok" plain="true" onclick="moveDictionary('up')">上移</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton"
+				iconCls="icon-ok" plain="true" onclick="moveDictionary('dn')">下移</a>
+		</div>
+	</div>
+
+	<div id="dictionaryDlg" class="easyui-dialog"
+		style="width: 400px; height: 280px; padding: 10px 20px" closed="true"
+		buttons="#dlg-buttons" modal="true">
+		<div class="ftitle">字典基本信息</div>
+
+
+		<form id="dictionaryfm" class="easyui-form" method="post">
+			<input type="hidden" id="id" name="id" value=""></input>
+			<table cellpadding="5" class="in-tb margin-top5">
+				<tr>
+					<td class="in-lab">字典名称:</td>
+					<td class="in-ctt"><input class="easyui-textbox" id="dic_name"
+						name="dicName" data-options="required:true"></input></td>
+				</tr>
+				<tr>
+					<td class="in-lab">字典代码:</td>
+					<td class="in-ctt"><input class="easyui-textbox" id="dic_code"
+						name="dicCode" data-options="required:true"></input></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	<div id="dlg-buttons">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-ok" onclick="saveDictionary()">保存</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-cancel"
+			onclick="javascript:$('#dictionaryDlg').dialog('close')">取消</a>
+	</div>
+
+
+</div>
+
+

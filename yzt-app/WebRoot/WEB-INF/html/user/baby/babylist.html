@@ -1,0 +1,189 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#babylist').datagrid({
+		url:'user/baby/listjson/${userId}',
+		onClickRow:function(rowIndex,row){
+			/*单机
+				$.messager.show({
+		            title: "提示",
+		            msg: row.maintitle
+		        });
+			*/
+			
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			$('#archiveadd').window('refresh','admin/zjzx/view/'+row.id);
+		},
+	});
+});
+
+function babyEdit(archivelist){
+	var rows = $('#babylist').datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+	 	var row = $('#babylist').datagrid('getSelected');
+		$('#baby_info').window('open').dialog('setTitle', '修改');
+		$('#ff_baby').form('load', row);
+	 }
+}
+
+function babyImg(archivelist){
+	var rows = $('#'+archivelist).datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+		var row = $('#'+archivelist).datagrid('getSelected');
+		$('#baby_picurl').window('open').dialog('setTitle', '修改头像');
+		$('#baby_img').form('load', row);
+			//posturl = "admin/"+categoryid+"/update/"+row.id;
+	 }
+}
+
+//$('#ff').submit();  
+function submitForm(ff){
+	userurl="user/baby/upload";
+	
+    //$('#'+ff).submit();
+    $('#'+ff).form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    
+		   $('#babylist').datagrid('reload'); 
+		    
+	    }    
+	});     
+}
+function clearForm(ff){
+    $('#'+ff).form('clear');
+}
+
+function showImg(value,row,index){
+	return "<img src=\""+value+"?time="+new Date().getTime()+"\" width=50 height=50 />";
+}
+
+
+function sub_Form(ff){
+	var userurl = "user/baby/save/${userId}";
+	
+    $('#'+ff).form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+		    $('#baby_info').window('close')
+		  //var rs = eval('('+ r +')');    
+	    	//console.info(rs);
+	        $('#babylist').datagrid('reload'); 
+	    }    
+	});     
+}
+
+function showBaby(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javacript:void(0);\" onclick=\"openWindow('user/baby/"+row.id+"');\"> "+value+" </a>";
+}
+
+function babyCreate(){
+	clearForm("ff_baby");
+	//var row = $('#archivelist').datagrid('getSelected');
+	$('#baby_info').window('open').dialog('setTitle', '创建');
+	//$('#archiveadd').window('refresh',url);
+	 
+		//$.messager.alert("",categoryid);
+	//posturl = "admin/"+categoryid+"/save";
+}
+function babyDelete(){
+	var row = $('#babylist').datagrid('getSelected');
+	$.post('user/baby/delete/${userId}/'+row.id, function(r) {
+       
+            $('#babylist').datagrid('reload');    // reload the user data
+        
+    }, 'json');
+}
+</script>
+
+<table id="babylist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar1',nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'asc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'picurl',width:100,align:'center',halign:'center',sortable:true,formatter: showImg">头像</th>
+				<th data-options=" field:'name',width:150,align:'center',halign:'center',sortable:true">名字</th>
+				<th data-options=" field:'sex',width:150,align:'center',halign:'center',sortable:true">性别</th>
+				<th data-options=" field:'birthday',width:150,align:'center',halign:'center',sortable:true">生日</th>
+				<th data-options=" field:'zodiac',width:60,align:'center',halign:'center',sortable:true,formatter: showVideo">生肖</th>
+				<th data-options=" field:'constellation',width:60,align:'center',halign:'center',sortable:true,formatter: showVideo">星座</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar1" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="babyCreate()">创建</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="babyDelete()">删除</a>
+			
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="babyEdit()">修改</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"  onclick="babyImg('babylist')">修改头像</a>
+		</div>
+	</div>
+	
+	<div id="baby_info" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_baby" action="" method="post">
+		<table cellpadding="5">
+		<input type="hidden"  name="id" value=""/>
+          <tr>
+	        <td>姓名：</td><td><input id="name" name="name" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td>性别：</td><td><input type="radio" name="sex"   value="0"></input>男
+	        		<input type="radio" name="sex"   value="1"></input>女</td>
+	      </tr>
+	      <tr>
+	        <td>生日：</td><td><input id="birthday" name="birthday" class="easyui-datebox"  value=""></input> </td>
+	      </tr>
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="sub_Form('ff_baby')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('ff_baby')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form>
+	</div>
+	
+	<div id="baby_picurl" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="baby_img" action="user/baby/upload"  method="post" enctype="multipart/form-data" >
+		<table cellpadding="5">
+          <tr><input type="hidden"  name="id" value=""/>
+	        <td>头像：</td><td><input  name="babyimgFile" class="easyui-filebox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('baby_img')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('baby_img')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form> 
+	</div>
+	
+	

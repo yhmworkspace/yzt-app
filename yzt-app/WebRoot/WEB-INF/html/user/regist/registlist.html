@@ -1,0 +1,136 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#archivelist').datagrid({
+		url:'user/regist/listjson',
+		rowStyler: function(index,row){
+			if (row.is_status==0){
+				//return 'background-color:#6293BB;color:#fff;';
+			}
+		},
+
+		onClickRow:function(rowIndex,row){
+			/*单机
+				$.messager.show({
+		            title: "提示",
+		            msg: row.maintitle
+		        });
+			*/
+			
+		},
+		#--
+		onDblClickRow:function(rowIndex,row){
+			$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			$('#archiveadd').window('refresh','admin/zjzx/view/'+row.id);
+		},
+		--#
+		remoteFilter:true
+	});
+	$('#archivelist').datagrid('enableFilter');
+});
+
+function openRegist(){
+	$('#registadd').window('open').dialog('setTitle', '注册');
+}
+
+function registForm(){
+    $('#ff').form('submit', {    
+	    url:'user/regist/verifycode',    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    	console.info("=="+$('#isMobile').textbox('getValue'));
+	    	/*
+	       if($('#isMobile').textbox('getValue') ==null){
+	       		return false;
+	       }
+	       if($('#isMobile').textbox('getValue') ==""){
+	       		return false;
+	       }
+	       */
+	        // return false to prevent submit;    
+	    },    
+	    success:function(r){    
+	        var rs = eval('(' + r + ')');    
+	        console.info(r);  
+	        $.messager.show({
+		            title: "提示",
+		            msg: rs.msg
+		    }); 
+	    }    
+	});  
+}
+function submitForm(){
+     $('#ff').form('submit', {    
+	    url:'user/regist/regist',    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    	var rs = eval('(' + r + ')');    
+	    	console.info(r);
+	        $.messager.show({
+		            title: "提示",
+		            msg: rs.msg
+		    });  
+	    }    
+	});  
+}
+function clearForm(){
+    $('#ff').form('clear');
+}
+
+</script>
+
+<input type="hidden" id="category_id" name="category_id" value="regist"></input> 
+<table id="archivelist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar',nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'isMobile',width:150,align:'center',halign:'center',sortable:true,formatter: showPic">手机号</th>
+				<th data-options=" field:'isVerifyVode',width:100,align:'center',halign:'center',sortable:true">验证码</th>
+				<th data-options=" field:'smsId',width:150,align:'center',halign:'center',sortable:true">通道编号</th>
+				<th data-options=" field:'createtime',width:100,align:'center',halign:'center',sortable:true,formatter: cellDate">发送时间</th>
+				<th data-options=" field:'overdueTime',width:100,align:'center',halign:'center',sortable:true,formatter: cellDate">过期时间</th>
+				<th data-options=" field:'registTime',width:100,align:'center',halign:'center',sortable:true,formatter: cellDate">注册成功时间</th>
+				<th data-options=" field:'requestCount',width:60,align:'center',halign:'center',sortable:true">请求次数</th>
+				<th data-options=" field:'status',width:60,align:'center',halign:'center',sortable:true,formatter: showComments">状态</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="openRegist()">注册</a>
+			
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="setOverdue(0)">锁定</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="setOverdue(1)">解锁</a>
+			
+		</div>
+	</div>
+	
+	<div id="registadd" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+		<form id="ff" action="" method="post">
+		<table cellpadding="5">
+          <tr>
+	        <td>手机：</td><td><input id="isMobile" name="isMobile" class="easyui-textbox" data-options="required:true" value=""></input>  <a href="javascript:void(0)" class="easyui-linkbutton" onclick="registForm();">获取验证码</a></td>
+	      </tr>
+	      <tr>
+	        <td>密码：</td><td><input id="isPassword" name="isPassword" class="easyui-textbox" data-options="required:true" value=""></input></td>
+	      </tr>
+	      <tr>
+	        <td>验证码：</td><td><input id="isVerifyCode" name="isVerifyCode" class="easyui-textbox" data-options="required:true" value=""></input></td>
+	      </tr>  
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">Submit</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form>
+	</div>

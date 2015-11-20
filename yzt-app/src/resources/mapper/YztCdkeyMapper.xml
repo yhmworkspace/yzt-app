@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztCdkeyMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztCdkey">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="cdkey" jdbcType="VARCHAR" property="cdkey" />
+    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+    <result column="yzt_commodity_id" jdbcType="VARCHAR" property="yztCommodityId" />
+    <result column="yzt_user_id" jdbcType="VARCHAR" property="yztUserId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+  </resultMap>
+</mapper>

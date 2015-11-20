@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztFeedbackMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztFeedback">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="feedback_content" jdbcType="VARCHAR" property="feedbackContent" />
+    <result column="yzt_user_id" jdbcType="VARCHAR" property="yztUserId" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="responsecontent" jdbcType="VARCHAR" property="responsecontent" />
+    <result column="responsetime" jdbcType="TIMESTAMP" property="responsetime" />
+    <result column="responser_id" jdbcType="VARCHAR" property="responserId" />
+     <result column="responser_name" jdbcType="VARCHAR" property="responserName" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+  </resultMap>
+</mapper>

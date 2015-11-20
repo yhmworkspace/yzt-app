@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztLearningcenterCommentPicMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztLearningcenterCommentPic">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="comment_id" jdbcType="VARCHAR" property="commentId" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_type" jdbcType="VARCHAR" property="fileType" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="file_size" jdbcType="INTEGER" property="fileSize" />
+    <result column="file_contenttype" jdbcType="VARCHAR" property="fileContenttype" />
+    <result column="course_id" jdbcType="VARCHAR" property="courseId" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+  </resultMap>
+  
+  	<sql id="tableColumns">
+		<trim suffix="" suffixOverrides=",">
+		 id,comment_id,file_name,file_type,file_path,file_size,file_contenttype,createtime
+		</trim>
+	</sql>
+  <select id="selectByIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		<include refid="tableColumns" />
+		from yzt_learningcenter_comment_pic where id in (${ids}) 
+  </select>
+  
+</mapper>

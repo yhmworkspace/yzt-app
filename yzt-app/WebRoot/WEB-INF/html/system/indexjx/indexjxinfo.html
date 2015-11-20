@@ -1,0 +1,49 @@
+
+<div class="easyui-layout" data-options="fit:true" style="">
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+
+<form id="archiveinfo" method="post" enctype="multipart/form-data">   
+     <table cellpadding="5"  class="in-tb margin-top5" >
+                <tr>
+                	<td class="in-lab" width="100px">精选内容id:</td>
+                    <td class="in-ctt"  ><input name="yztChoicenesscontentId" class="easyui-textbox"></input></td>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt"><input name="maintitle" class="easyui-textbox" data-options="required:true" value=""></input></td>
+                </tr>
+               
+                <tr>
+                    <td  class="in-lab" width="100px">显示图片:</td>
+                    <td class="in-ctt" colspan="3"><input name="imgUrl" id="imgUrl" class="easyui-textbox" data-options="" style="width:400px" value=""></input>
+                    &nbsp;&nbsp;填写地址或选择本地文件<br>
+                    	<input name="imgFile" class="easyui-filebox" data-options="buttonText:'选择文件'" style="width:250px"></input>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">生效时间:</td>
+                    <td class="in-ctt" ><input name="startTime" class="easyui-datebox" data-options="" ></input></td>
+                	<td class="in-lab" width="100px">失效时间:</td>
+                	<td class="in-ctt" ><input name="endTime" class="easyui-datebox" data-options="" ></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"  ><input name="weight" class="easyui-textbox"></input></td>
+                </tr>
+                
+                
+                
+        </table> 
+</form> 
+</div>
+<div data-options="region:'south',border:false" style="text-align:right;padding:5px 5px 5px;">
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-ok'" href="javascript:void(0)" onclick="archiveSave('save');">保存</a>&nbsp;
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="archiveClose()">关闭</a>
+	</div>
+</div> 
+
+<script type="text/javascript">
+#if(archive_id != null)
+	$('#archiveinfo').form('load', 'admin/indexjx/infoJson/${archive_id}');
+#end
+
+
+</script>

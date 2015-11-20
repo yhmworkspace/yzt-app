@@ -1,0 +1,248 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#archivelist').datagrid({
+		url:'commodity/listjson',
+		rowStyler: function(index,row){
+			if (row.is_status==0){
+				//return 'background-color:#6293BB;color:#fff;';
+			}
+		},
+
+		onClickRow:function(rowIndex,row){
+			/*单机
+				$.messager.show({
+		            title: "提示",
+		            msg: row.maintitle
+		        });
+			*/
+			
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			$('#archiveadd').window('refresh','commodity/detail/'+row.id);
+		},
+		remoteFilter:true
+	});
+	$('#archivelist').datagrid('enableFilter');
+});
+
+function commodityEdit(){
+	var rows = $('#archivelist').datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+	 	var row = $('#archivelist').datagrid('getSelected');
+		$('#commodity_info').window('open').dialog('setTitle', '修改数据');
+		$('#ff_commodity_info').form('load', row);
+	 }
+}
+
+
+
+//$('#ff').submit();  
+function submitCommodity(){
+	var userurl ="commodity/save";
+	
+	
+    //$('#'+ff).submit();
+    $('#ff_commodity_info').form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    	$('#commodity_info').window('close');
+		   $('#archivelist').datagrid('reload'); 
+		    
+	    }    
+	});     
+}
+function clearForm(ff){
+    $('#'+ff).form('clear');
+}
+
+function showImg(value,row,index){
+	return "<img src=\""+value+"?time="+new Date().getTime()+"\" width=50 height=50 />";
+}
+
+function commodityCreate(){
+	clearForm('ff_commodity_info');
+	$('#commodity_info').window('open').dialog('setTitle', '新增');
+}
+
+
+function showCdkey(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javacript:void(0);\" onclick=\"openDialog('commodity/cdkey/html/"+row.id+"');\"> "+value+" </a>";
+}
+
+function openDialog(url){
+	//var row = $('#archivelist').datagrid('getSelected');
+	$('#archiveadd').window('open').dialog('setTitle', '数据');
+	$('#archiveadd').window('refresh',url);
+	 
+		//$.messager.alert("",categoryid);
+	//posturl = "admin/"+categoryid+"/save";
+}
+function commodityRemove() {
+	 var rows = $('#archivelist').datagrid('getSelections');
+		 //alert(rows.length);
+		 if(rows.length > 0){
+			
+			 $.messager.confirm('确认', '确定删除当前'+rows.length+'条数据?', function(re) {
+		            if (re) {
+		            	var ids = [];
+		                for (var i = 0; i < rows.length; i++) {
+		                    ids.push(rows[i].id);
+		                }               
+		                $.post('commodity/delete', {ids: ids.join(',')}, function(r) {
+		                    if (r.success) {
+		                        $.messager.show({// show error message
+		                            title: '提示',
+		                            msg: r.msg
+		                        });
+		                        $('#archivelist').datagrid('reload');    // reload the user data
+		                    } else {
+		                        $.messager.show({// show error message
+		                            title: 'Error',
+		                            msg: r.msg
+		                        });
+		                    }
+		                }, 'json');
+		            }
+		        });
+		 }
+}
+
+function commodityTrigger(){
+ var row = $('#archivelist').datagrid('getSelected');
+ if(row){
+ 	$.messager.prompt('提示信息', '请输入你的id：', function(r){
+		if (r){
+			//alert('你的id是：' + r);
+			console.info('user/integral/cost/'+r+'/'+row.id);
+			$.post('user/integral/cost/'+r+'/'+row.id,{},  function(rs) {
+               //console.info(rs);
+                $('#archivelist').datagrid('reload');    // reload the user data
+                $.messager.show({
+		            title: "提示",
+		            msg: rs.msg
+		        });
+            }, 'json');
+		}
+	});
+ }
+	}
+	
+function formatter_type(value,row,index){
+		if (value == 0){
+			return '兑换';
+		}else if(value == 1){
+			return '抽奖';
+		}
+	}
+	
+	function formatter_isrepetition(value,row,index){
+		if (value == 0){
+			return '单次';
+		}else if(value == 1){
+			return '多次';
+		}
+	}
+</script>
+
+<table id="archivelist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar',nowrap:false,striped:true
+							,sortName:'startTime',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'picurl',width:60,align:'center',halign:'center',sortable:true,formatter: showImg">图像</th>
+				<th data-options=" field:'name',width:150,align:'center',halign:'center',sortable:true">名称</th>
+				<th data-options=" field:'integralValue',width:60,align:'center',halign:'center',sortable:true">糖果</th>
+				<th data-options=" field:'startTime',width:150,align:'center',halign:'center',sortable:true">开始时间</th>
+				<th data-options=" field:'endTime',width:150,align:'center',halign:'center',sortable:true">结束时间</th>
+				<th data-options=" field:'isCount',width:60,align:'center',halign:'center',sortable:true,formatter: showCdkey">总数</th>
+				<th data-options=" field:'isSellCount',width:60,align:'center',halign:'center',sortable:true">已兑换</th>
+				<th data-options=" field:'status',width:150,align:'center',halign:'center',sortable:true,formatter: formatter_status">是否有效</th>
+				<th data-options=" field:'type',width:150,align:'center',halign:'center',sortable:true,formatter: formatter_type">类型</th>	
+				<th data-options=" field:'isrepetition',width:150,align:'center',halign:'center',sortable:true,formatter:formatter_isrepetition">兑换限制</th>			
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="commodityCreate()">新增</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="commodityEdit()">修改</a>
+			
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="commodityRemove()">删除</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="commodityTrigger()">模拟触发</a>
+		
+		</div>
+	</div>
+	
+	
+	<div id="commodity_info" class="easyui-window"  style="width:500px;height:400px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_commodity_info"   method="post" enctype="multipart/form-data" >
+		<table cellpadding="5">
+          <tr><input type="hidden"  name="id" value=""/>
+	        <td>名称：</td><td><input  name="name" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td>糖果：</td><td><input  name="integralValue" class="easyui-numberbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	       <tr>
+	        <td>数量：</td><td><input  name="isCount" class="easyui-numberbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td>图片：</td><td><input  name="imgFile" class="easyui-filebox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	       <tr>
+	        <td>开始时间：</td><td><input  name="startTime" class="easyui-datebox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	       <tr>
+	        <td>结束时间：</td><td><input  name="endTime" class="easyui-datebox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td>类型：</td><td><select  class="easyui-combobox" name="type" data-options="panelHeight:60" style="width:100px;">   
+					    <option value="0">兑换</option>   
+					    <option value="1">抽奖</option>   
+					       </select>
+					  </td>
+	      </tr>
+	      <tr>
+	        <td>兑换限制：</td><td><select  class="easyui-combobox" name="isrepetition" data-options="panelHeight:60" style="width:100px;">   
+					    <option value="0">单次</option>   
+					    <option value="1">多次</option>   
+					      
+					  </td>
+	      </tr>
+	       <tr>
+	        <td>简介：</td><td><input  name="content" class="easyui-textbox" data-options="multiline:true" style="height:60px;width:300px" value=""></input> </td>
+	      </tr>
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitCommodity()">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('ff_commodity_info')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form> 
+	</div>
+	
+	
+	
+	
+	<div id="archiveadd" class="easyui-window"  style="width:700px;height:600px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	        
+	</div>

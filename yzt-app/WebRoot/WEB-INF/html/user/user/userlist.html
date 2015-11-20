@@ -1,0 +1,365 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#archivelist').datagrid({
+		url:'user/userinfo/listjson',
+		rowStyler: function(index,row){
+			if (row.is_status==0){
+				//return 'background-color:#6293BB;color:#fff;';
+			}
+		},
+
+		onClickRow:function(rowIndex,row){
+			/*单机
+				$.messager.show({
+		            title: "提示",
+		            msg: row.maintitle
+		        });
+			*/
+			
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			$('#archiveadd').window('refresh','admin/zjzx/view/'+row.id);
+		},
+		remoteFilter:true
+	});
+	$('#archivelist').datagrid('enableFilter');
+});
+
+function userinfoEdit(archivelist){
+	var rows = $('#'+archivelist).datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+	 	var row = $('#'+archivelist).datagrid('getSelected');
+		$('#userinfo_nicknam').window('open').dialog('setTitle', '修改昵称');
+		$('#ff_nickname').form('load', row);
+	 }
+}
+
+function userinfoImg(archivelist){
+	var rows = $('#'+archivelist).datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+		var row = $('#'+archivelist).datagrid('getSelected');
+		$('#userinfo_picurl').window('open').dialog('setTitle', '修改头像');
+		$('#ff_picurl').form('load', row);
+			//posturl = "admin/"+categoryid+"/update/"+row.id;
+	 }
+}
+
+//$('#ff').submit();  
+function submitForm(ff){
+	var userurl = null;///"user/userinfo/"+ff;
+	console.info("userurl="+userurl);
+	/**/
+	if(ff =="ff_nickname"){
+		userurl="user/userinfo/update";
+	}
+	if(ff =="ff_picurl"){
+		userurl="user/userinfo/upload";
+	}
+	
+    //$('#'+ff).submit();
+    $('#'+ff).form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    
+		   $('#archivelist').datagrid('reload'); 
+		    
+	    }    
+	});     
+}
+function clearForm(ff){
+    $('#'+ff).form('clear');
+}
+
+function showImg(value,row,index){
+	return "<img src=\""+value+"?time="+new Date().getTime()+"\" width=50 height=50 />";
+}
+
+function userinfoLogin(meth){
+	$('#userinfo_'+meth).window('open').dialog('setTitle', '');
+}
+
+function userinfoPwd(archivelist){
+	var rows = $('#'+archivelist).datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+		var row = $('#'+archivelist).datagrid('getSelected');
+		$('#userinfo_pwd').window('open').dialog('setTitle', '修改密码');
+		$('#ff_updatepwd').form('load', row);
+			//posturl = "admin/"+categoryid+"/update/"+row.id;
+	 }
+}
+
+function sub_Form(ff){
+	var userurl = "user/userinfo/"+ff;
+	console.info("userurl="+userurl);
+	/*
+	if(ff =="ff_nickname"){
+		userurl="user/userinfo/update";
+	}
+	if(ff =="ff_picurl"){
+		userurl="user/userinfo/upload";
+	}
+	*/
+    //$('#'+ff).submit();
+    $('#ff_'+ff).form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	     
+		    
+		  var rs = eval('('+ r +')');    
+	    	console.info(rs);
+	       $.messager.show({
+		            title: "提示",
+		            msg: rs.msg
+		        });
+	    }    
+	});     
+}
+
+function showBaby(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javascript:void(0);\" onclick=\"openDialog('user/baby/html/"+row.id+"');\"> "+value+" </a>";
+}
+function showIntegral(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javascript:void(0);\" onclick=\"openDialog('user/integral/html/"+row.id+"');\"> "+value+" </a>";
+}
+
+function showIntegralEarn(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javascript:void(0);\" onclick=\"openDialog('user/integral/html/"+row.id+"/1');\"> "+value+" </a>";
+}
+function showIntegralCost(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javascript:void(0);\" onclick=\"openDialog('user/integral/html/"+row.id+"/0');\"> "+value+" </a>";
+}
+function showFeedback(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javascript:void(0);\" onclick=\"openDialog('user/feedback/html/"+row.id+"');\"> 反馈 </a>";
+}
+function showcollectback(value,row,index){
+	//openWindow("archive/originalhtml/${is_category_id}/"+row.id);
+	//var category_id = $('#category_id').val()
+	return "<a href=\"javascript:void(0);\" onclick=\"openDialog('user/collect/html/"+row.id+"');\">"+value+"</a>";
+} 
+
+
+function openDialog(url){
+	$('#archiveadd').window('open').dialog('setTitle', '精选列表');
+	$('#archiveadd').window('refresh',url);
+}
+
+function userinfoResetPwd() {
+	$('#resetpwd').window('open');
+}
+function getVerifycodeForm(){
+    $('#ff_resetpwd').form('submit', {    
+	    url:'user/userinfo/verifycode',    
+	    onSubmit: function(){ 
+	    },    
+	    success:function(r){    
+	        var rs = eval('(' + r + ')');    
+	        console.info(r);  
+	        $.messager.show({
+		            title: "提示",
+		            msg: rs.msg
+		    }); 
+	    }    
+	});  
+}
+function submitFormPwd(){
+     $('#ff_resetpwd').form('submit', {    
+	    url:'user/userinfo/resetpwd',    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    	var rs = eval('(' + r + ')');    
+	    	console.info(rs);
+	        $.messager.show({ 
+		            title: "提示",
+		            msg: rs.msg
+		    });  
+	    }    
+	});  
+}
+</script>
+
+<input type="hidden" id="category_id" name="category_id" value="userinfo"></input> 
+<table id="archivelist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar',nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'picurl',width:60,align:'center',halign:'center',sortable:true,formatter: showImg">头像</th>
+				<th data-options=" field:'account',width:150,align:'center',halign:'center',sortable:true">账号</th>
+				<th data-options=" field:'nickname',width:150,align:'center',halign:'center',sortable:true">昵称</th>
+				<th data-options=" field:'createtime',width:150,align:'center',halign:'center',sortable:true,formatter:cellDate">创建时间</th>
+				<th data-options=" field:'babyCount',width:60,align:'center',halign:'center',sortable:true,formatter: showBaby">宝宝</th>
+				<th data-options=" field:'integralCurr',width:60,align:'center',halign:'center',sortable:true,formatter: showIntegral">糖果</th>
+				<th data-options=" field:'integralEarn',width:60,align:'center',halign:'center',sortable:true,formatter: showIntegralEarn">收入糖果</th>
+				<th data-options=" field:'integralCost',width:60,align:'center',halign:'center',sortable:true,formatter: showIntegralCost">消费糖果</th>
+				<th data-options=" field:'status',width:50,align:'center',halign:'center',sortable:true">状态</th>
+				<th data-options=" field:'yztLearningcenterId',width:150,align:'center',halign:'center',sortable:true">早教中心id</th>		
+				<th data-options=" field:'aa',width:150,align:'center',halign:'center',sortable:true,formatter: showFeedback">我的反馈</th>		
+				<th data-options=" field:'collectContentCount',width:150,align:'center',halign:'center',sortable:true,formatter: showcollectback">精选收藏</th>	
+				
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="userinfoLogin('login')">登录</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="userinfoPwd('archivelist')">修改密码</a>
+			
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="userinfoEdit('archivelist')">修改昵称</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"  onclick="userinfoImg('archivelist')">修改头像</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"  onclick="userinfoResetPwd('archivelist')">找回密码</a>
+		
+		</div>
+	</div>
+	
+	<div id="userinfo_nicknam" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_nickname" action="user/userinfo/update" method="post">
+		<table cellpadding="5">
+          <tr><input type="hidden"  name="id" value=""/>
+	        <td>昵称：</td><td><input id="nickname" name="nickname" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('ff_nickname')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('ff_nickname')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form>
+	</div>
+	
+	<div id="userinfo_picurl" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_picurl" action="user/userinfo/upload"  method="post" enctype="multipart/form-data" >
+		<table cellpadding="5">
+          <tr><input type="hidden"  name="id" value=""/>
+	        <td>头像：</td><td><input  name="imgFile" class="easyui-filebox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm('ff_picurl')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('ff_picurl')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form> 
+	</div>
+	
+	<div id="userinfo_pwd" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_updatepwd" action="user/userinfo/update" method="post">
+		<table cellpadding="5">
+          <tr><input type="hidden"  name="id" value=""/>
+          <input type="hidden"  name="account" value=""/>
+          	
+	        <td>原密码：</td><td><input id="password" name="password" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td>新密码：</td><td><input id="password_new" name="password_new" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td>确认新密码：</td><td><input id="password_re" name="password_re" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="sub_Form('updatepwd')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-nbnlinkbutton" onclick="clearForm('updatepwd')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form>
+	</div>
+	
+	<div id="userinfo_login" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_login" action="user/userinfo/login" method="post">
+		<table cellpadding="5">
+          <tr>
+	        <td>用户名：</td><td><input id="account" name="account" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      <tr>
+	        <td>密码：</td><td><input id="password" name="password" class="easyui-textbox" data-options="required:true" value=""></input> </td>
+	      </tr>
+	      
+	      
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="sub_Form('login')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('login')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form>
+	</div>
+	
+	<div id="resetpwd" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+		<form id="ff_resetpwd" action="" method="post">
+		<table cellpadding="5">
+          <tr>
+	        <td>手机：</td><td><input  name="isMobile" class="easyui-textbox" data-options="required:true" value=""></input>  <a href="javascript:void(0)" class="easyui-linkbutton" onclick="getVerifycodeForm();">获取验证码</a></td>
+	      </tr>
+	      <tr>
+	        <td>密码：</td><td><input  name="isPassword" class="easyui-textbox" data-options="required:true" value=""></input></td>
+	      </tr>
+	      <tr>
+	        <td>确认密码：</td><td><input  name="isPassword_re" class="easyui-textbox" data-options="required:true" value=""></input></td>
+	      </tr>
+	      <tr>
+	        <td>验证码：</td><td><input name="isVerifyCode" class="easyui-textbox" data-options="required:true" value=""></input></td>
+	      </tr>  
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitFormPwd()">Submit</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
+	        </div>
+	        </td>
+	      </tr>
+		</form>
+	</div>
+	
+	<div id="archiveadd" class="easyui-window"  style="width:800px;height:600px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	        
+	</div>

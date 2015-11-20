@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztUserinfoMapper">
+	<resultMap id="BaseResultMap" type="com.yzt.app.model.YztUserinfo">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="account" jdbcType="VARCHAR" property="account" />
+		<result column="password" jdbcType="VARCHAR" property="password" />
+		<result column="nickname" jdbcType="VARCHAR" property="nickname" />
+		<result column="back_user_id" jdbcType="VARCHAR" property="backUserId" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="picurl" jdbcType="VARCHAR" property="picurl" />
+		<result column="system_msg_switch" jdbcType="INTEGER" property="systemMsgSwitch" />
+		<result column="choiceness_msg_switch" jdbcType="INTEGER"
+			property="choicenessMsgSwitch" />
+		<result column="change_msg_ switch" jdbcType="INTEGER"
+			property="changeMsgSwitch" />
+		<result column="location" jdbcType="VARCHAR" property="location" />
+		<result column="integral_curr" jdbcType="INTEGER" property="integralCurr" />
+		<result column="integral_earn" jdbcType="INTEGER" property="integralEarn" />
+		<result column="integral_cost" jdbcType="INTEGER" property="integralCost" />
+		<result column="is_merchants" jdbcType="INTEGER" property="isMerchants" />
+		<result column="baby_count" jdbcType="INTEGER" property="babyCount" />
+		<result column="yzt_learningcenter_id" jdbcType="VARCHAR"
+			property="yztLearningcenterId" />
+		<result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+		<result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+		<result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+		<result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+		<result column="verifycode" jdbcType="VARCHAR" property="verifycode" />
+		<result column="collect_content_count" jdbcType="INTEGER" property="collectContentCount" />
+	</resultMap>
+
+	<!-- 修改,SQL更新 -->
+	<update id="updateBySql" parameterType="java.lang.String">
+		update yzt_userinfo ${sql}
+	</update>
+
+	<!-- 根据指定的多个id 查询对象 -->
+	<select id="selectByIds" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from yzt_userinfo where id in (${ids})
+	</select>
+	
+	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from yzt_userinfo where id='${value}'
+	</select>
+	
+</mapper>

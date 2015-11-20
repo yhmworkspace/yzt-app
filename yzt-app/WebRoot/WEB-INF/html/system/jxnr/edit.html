@@ -1,0 +1,148 @@
+<div id="choiceness_editDlg" class="easyui-dialog" data-options="
+		width: dlg_width,
+		height: dlg_height,
+		left: dlg_left,
+		top:dlg_top,
+		closed:true,
+		modal:true,
+		resizable:true,
+		buttons:[{
+			text:'保存',
+			handler:function(){
+				choiceness_save();
+			}
+		},{
+			text:'取消',
+			handler:function(){
+				$('#choiceness_editDlg').dialog('close');
+			}
+		}]
+">
+<div class="easyui-layout" data-options="fit:true" style="">
+<form id="choiceness_editForm"  method="post" > 	
+<input type="hidden" name="id" />
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+     <table cellpadding="5"  class="in-tb margin-top5" >
+      
+     			<tr>
+                	<td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"><input name="weight" class="easyui-textbox" data-options="required:true" ></input></td>
+                
+                </tr>
+                <tr>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt" colspan="3"><input name="maintitle" class="easyui-textbox" data-options="required:true"  style="width:90%;height:30px"></input></td>
+                </tr>
+              
+                <tr>
+                    <td class="in-lab" width="100px">联系电话:</td>
+                    <td class="in-ctt" colspan="3"><input name="contactPhone" class="easyui-textbox" data-options="required:true"  style="width:400px"></input>&nbsp;多个以|隔开</td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">开始时间:</td>
+                    <td class="in-ctt" ><input name="startTime" class="easyui-datebox" data-options="" ></input></td>
+                	<td class="in-lab" width="100px">结束时间:</td>
+                	<td class="in-ctt" ><input name="endTime" class="easyui-datebox" data-options="" ></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">地理位置:</td>
+                    <td class="in-ctt" colspan="3">
+                   		省：<select id="cmbProvince" name="province"></select>
+						市：<select id="cmbCity" name="city"></select>
+						区：<select id="cmbArea" name="district"></select>
+					
+					<script type="text/javascript">
+						addressInit('cmbProvince', 'cmbCity', 'cmbArea');
+					</script>
+						地址：<input type="text" id ="buildingId" onblur="getBusiniss();" name="street">
+	                    <!-- <input id="buildingId" name="building" onclick="getBusiniss();" type="text" class="easyui-textbox" style="width:100px;" data-options="prompt:'建筑物'" /> -->
+	                   <!--   <input   style="width:100px;" data-options="prompt:'商圈'" disabled="disabled"/> -->
+	                  	   商圈：<input type="text"   id="businissCircleId" name="businissCircle"  style="width:200px;">
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td class="in-lab" >经度:</td>
+                    <td class="in-ctt"><input name="longitude" id="longitudeId" class="easyui-textbox" ></input></td>
+                    <td class="in-lab">纬度:</td>
+                    <td class="in-ctt"><input name="latitude" id="latitudeId" class="easyui-textbox" ></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab">最低年龄:</td>
+                    <td class="in-ctt">
+                    	<select class="easyui-combobox" name="minAge"  style="width:100px;">
+					        <option value="0">0岁</option>
+					        <option value="1">1岁</option>
+					        <option value="2">2岁</option>
+					        <option value="3">3岁</option>
+					        <option value="4">4岁</option>
+					        <option value="5">5岁</option>
+					        <option value="6">6岁</option>
+					        <option value="7">7岁</option>
+					        <option value="8">8岁</option>
+					        <option value="9">8岁</option>
+					        <option value="10">10岁</option>
+					        <option value="11">11岁</option>
+					        <option value="12">12岁</option>
+					        <option value="13">13岁</option>
+					        <option value="14">14岁</option>
+					        <option value="15">15岁</option>
+					        <option value="16">16岁</option>
+					        <option value="17">17岁</option>
+					        <option value="18">18岁</option>
+					     </select>
+                    </td>
+                    <td class="in-lab">最高年龄:</td>
+                    <td class="in-ctt">
+                    	<select class="easyui-combobox" name="maxAge" style="width:100px;">
+					        <option value="0">0岁</option>
+					        <option value="1">1岁</option>
+					        <option value="2">2岁</option>
+					        <option value="3">3岁</option>
+					        <option value="4">4岁</option>
+					        <option value="5">5岁</option>
+					        <option value="6">6岁</option>
+					        <option value="7">7岁</option>
+					        <option value="8">8岁</option>
+					        <option value="9">8岁</option>
+					        <option value="10">10岁</option>
+					        <option value="11">11岁</option>
+					        <option value="12">12岁</option>
+					        <option value="13">13岁</option>
+					        <option value="14">14岁</option>
+					        <option value="15">15岁</option>
+					        <option value="16">16岁</option>
+					        <option value="17">17岁</option>
+					        <option value="18">18岁</option>
+					     </select>
+                    </td>
+                </tr>
+                
+                 <tr>
+                    <td class="in-lab">分类:</td>
+                    <td class="in-ctt" colspan="3" id="eduTypeId">
+	                  <input type="checkbox" name="eduType"  value="亲子游">亲子游
+						<input type="checkbox" name="eduType"  value="儿童教育">儿童教育
+						<input type="checkbox" name="eduType"  value="舞台剧">舞台剧
+						<input type="checkbox" name="eduType"  value="亲子课堂">亲子课堂
+					</td>
+					<!-- <td class="in-ctt" colspan="3" >
+                    	<input type="text" id="edutypeId" name="eduType">
+					</td> -->
+                </tr>
+                <tr>
+                
+                    <td class="in-lab">内容编辑:</td>
+                    <td class="in-ctt" colspan="3">
+                    	<textarea  id="introductionId" name="introduction" cols="100" rows="8" style="width:700px;height:300px;"></textarea>
+                    </td>
+                </tr>
+                <tr><td></td></tr>
+                
+             
+        </table> 
+
+</div>
+</form> 
+</div> 
+</div>

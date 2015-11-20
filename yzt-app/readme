@@ -1,0 +1,16 @@
+服务器地址：https://console.vyun.com/login  
+账户：sswdc
+密码：781024
+
+
+http://103.227.82.14/  administrator:  YZT123babycandy
+mysql: root yztroot
+
+1.数据库糖果明细表(yzt_integral_detail)增加兑换码字段（cdkey_code）
+
+2.精选，图片的增删改查。 //完成
+
+3.课程的图片,子课程删除--
+
+4.精彩内容-评论
+

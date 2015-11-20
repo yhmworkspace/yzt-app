@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztIntegralTaskMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztIntegralTask">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="task_type" jdbcType="INTEGER" property="taskType" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="integral_count" jdbcType="INTEGER" property="integralCount" />
+    <result column="integral_value" jdbcType="INTEGER" property="integralValue" />
+    <result column="endtime" jdbcType="VARCHAR" property="endtime" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="iscomplete" jdbcType="INTEGER" property="iscomplete" />
+  </resultMap>
+</mapper>

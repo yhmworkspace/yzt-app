@@ -1,0 +1,154 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#msglist').datagrid({
+		url:'message/listjson',
+		remoteFilter:true
+	});
+	$('#msglist').datagrid('enableFilter');
+});
+
+function msgCreate(){
+	$('#ff_msg').form('clear');
+	$('#msgadd').window('open').dialog('setTitle', '新增');
+}
+
+function msgEdit(){
+	var rows = $('#msglist').datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+	 	var row = $('#msglist').datagrid('getSelected');
+		$('#msgadd').window('open').dialog('setTitle', '修改');
+		$('#ff_msg').form('load', row);
+	 }
+}
+
+
+
+
+//$('#ff').submit();  
+function submitTask(){
+	var userurl ="message/save/";
+	
+	
+    //$('#'+ff).submit();
+    $('#ff_msg').form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    	$('#msgadd').window('close');
+		   $('#msglist').datagrid('reload'); 
+		    
+	    }    
+	});     
+}
+
+function taskRemove() {
+	 var rows = $('#msglist').datagrid('getSelections');
+		 //alert(rows.length);
+		 if(rows.length > 0){
+			
+			 $.messager.confirm('确认', '确定删除当前'+rows.length+'条数据?', function(re) {
+		            if (re) {
+		            	var ids = [];
+		                for (var i = 0; i < rows.length; i++) {
+		                    ids.push(rows[i].id);
+		                }               
+		                $.post('message/delete', {ids: ids.join(',')}, function(r) {
+		                   
+		                       $('#msglist').datagrid('reload');    // reload the user data
+		                    
+		                }, 'json');
+		            }
+		        });
+		 }
+}
+
+function msgTrigger(){
+ var row = $('#msglist').datagrid('getSelected');
+ if(row){
+ 	$.messager.prompt('提示信息', '请输入你的id：', function(r){
+		if (r){
+			//alert('你的id是：' + r);
+			//console.info('user/integral/earn/'+r+'/'+row.id);
+			$.post('user/message/read/'+r+'/'+row.id,{},  function(r) {
+               var rs = eval("'"+r+"'");
+                $.messager.show({
+		            title: "提示",
+		            msg: rs.msg
+		        });
+            }, 'json');
+		}
+	});
+ }
+	
+
+	
+}
+
+</script>
+ 
+	<table id="msglist" data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,
+					ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbarmsg',
+					nowrap:false,striped:true,sortName:'createtime',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'title',width:100,align:'center',halign:'center',sortable:true">标题</th>
+				<th data-options=" field:'content',width:150,align:'center',halign:'center',sortable:true">内容</th>
+				<th data-options=" field:'linkurl',width:150,align:'center',halign:'center',sortable:true,formatter:showUrl">链接</th>
+				<th data-options=" field:'msgtype',width:100,align:'center',halign:'center',sortable:true">类型</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbarmsg" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="msgCreate()">新增</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="msgEdit()">修改</a>
+			
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="taskRemove()">删除</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="msgTrigger()">模拟触发</a>
+		
+		</div>
+	</div>
+	
+	<div id="msgadd" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+		<form id="ff_msg" action="" method="post">
+		<table cellpadding="5">
+          <tr><input type="hidden" name="id" value=""/>
+	        <td>标题：</td><td><input name="title" class="easyui-textbox" data-options="required:true" value=""></input>  </td>
+	      </tr>
+	      <tr>
+	        <td>内容：</td><td><input name="content" class="easyui-textbox" data-options="required:true,multiline:true" style="width:200px;height:150px" value=""></input>  </td>
+	      </tr>
+	      <tr>
+	        <td>链接：</td><td><input name="linkurl" class="easyui-textbox" data-options="required:true" style="width:200px" value=""></input>  </td>
+	      </tr>
+	      
+	      <tr>
+	        <td>消息类型：</td><td><select  class="easyui-combobox" name="msgtype" data-options="panelHeight:60" style="width:100px;">   
+					    <option value="0">系统</option> 
+					    <option value="1">精彩内容</option>   
+					    <option value="2">变化</option>   
+					      </select>
+					  </td>
+	      </tr>
+	      
+	      <tr>
+	      	<td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitTask()">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	    </table>
+		</form>
+	</div>

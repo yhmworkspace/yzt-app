@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<base href="${WebRoot}/">
+<title>Insert title here</title>
+	<link rel="stylesheet" href="js/kindeditor/themes/default/default.css" />
+	<link rel="stylesheet" href="js/kindeditor/plugins/code/prettify.css" />
+	<script type="text/javascript" src="js/easyui/jquery.min.js"></script>
+	<script charset="utf-8" src="js/kindeditor/kindeditor.js"></script>
+	<script charset="utf-8" src="js/kindeditor/lang/zh_CN.js"></script>
+	<script charset="utf-8" src="js/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript">
+KindEditor.ready(function(K) {
+	var editor1 = K.create('textarea[name="introduction"]', {
+		cssPath : '/js/kindeditor/plugins/code/prettify.css',
+		uploadJson : '/js/jsp/upload_json.jsp',
+		fileManagerJson : '/js/jsp/file_manager_json.jsp',
+		allowFileManager : true,
+		afterCreate : function() {
+			var self = this;
+			K.ctrl(document, 13, function() {
+				self.sync();
+				document.forms['archiveinfo'].submit();
+			});
+			K.ctrl(self.edit.doc, 13, function() {
+				self.sync();
+				document.forms['archiveinfo'].submit();
+			});
+		}
+	});
+	prettyPrint();
+});
+function saveJxnr(){
+	console.info('text=='+$('#introduction').text());
+	console.info('val=='+$('#introduction').val());
+	console.info('html=='+$('#introduction').html());
+}
+</script>
+</head>
+<body>
+<form action="admin/jxnr/test1">
+<textarea id="introduction" name="introduction" cols="100" rows="8" style="width:500px;height:200px;visibility:hidden;"></textarea>
+                
+<input type="submit" name="button" value="提交内容" /></form>		
+</body>
+</html>

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+#include("../../common/header.html")
+<link rel="stylesheet" type="text/css" href="js/webuploader/webuploader.css">
+<script type="text/javascript" src="js/webuploader/webuploader.js"></script>
+<script type="text/javascript">
+$(function(){
+	
+	//$('#archivelist').datagrid('enableFilter');
+	//var $ = jQuery,
+    $list = $('#thelist'),
+    $btn = $('#ctlBtn'),
+    state = 'pending',
+    uploader;
+
+uploader = WebUploader.create({
+
+    // 不压缩image
+    resize: false,
+
+    // swf文件路径
+    swf: 'js/webuploader/Uploader.swf',
+
+    // 文件接收服务端。
+    server: 'admin/jxnr/video/save/${jxnr_id}',
+
+    // 选择文件的按钮。可选。
+    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+    pick: '#picker'
+});
+
+// 当有文件添加进来的时候
+uploader.on( 'fileQueued', function( file ) {
+    $list.append( '<div id="' + file.id + '" class="item">' +
+        '<h4 class="info">' + file.name + '</h4>' +
+        '<p class="state">等待上传...</p>' +
+    '</div>' );
+});
+
+// 文件上传过程中创建进度条实时显示。
+uploader.on( 'uploadProgress', function( file, percentage ) {
+    var $li = $( '#'+file.id ),
+        $percent = $li.find('.progress .progress-bar');
+
+    // 避免重复创建
+    if ( !$percent.length ) {
+        $percent = $('<div class="progress progress-striped active">' +
+          '<div class="progress-bar" role="progressbar" style="width: 0%">' +
+          '</div>' +
+        '</div>').appendTo( $li ).find('.progress-bar');
+    }
+
+    $li.find('p.state').text('上传中');
+
+    $percent.css( 'width', percentage * 100 + '%' );
+});
+
+uploader.on( 'uploadSuccess', function( file ) {
+    $( '#'+file.id ).find('p.state').text('已上传');
+});
+
+uploader.on( 'uploadError', function( file ) {
+    $( '#'+file.id ).find('p.state').text('上传出错');
+});
+
+uploader.on( 'uploadComplete', function( file ) {
+    $( '#'+file.id ).find('.progress').fadeOut();
+});
+
+uploader.on( 'all', function( type ) {
+    if ( type === 'startUpload' ) {
+        state = 'uploading';
+    } else if ( type === 'stopUpload' ) {
+        state = 'paused';
+    } else if ( type === 'uploadFinished' ) {
+        state = 'done';
+    }
+
+    if ( state === 'uploading' ) {
+        $btn.text('暂停上传');
+    } else {
+        $btn.text('开始上传');
+    }
+});
+
+$btn.on( 'click', function() {
+    if ( state === 'uploading' ) {
+        uploader.stop();
+    } else {
+        uploader.upload();
+    }
+});
+
+
+	$('#originallist').datagrid({
+		onClickRow: function(index,row){
+			/**
+			$.messager.show({
+	            title: "提示",
+	            msg: row.file_name
+	        });
+			/*
+			
+			
+			if(row.file_type=="jpg"){
+				$('#originalview').panel({    
+				    open:true,
+					href:'archive/originalviewhtml/${is_category_id}/${archive_id}/'+row.id+'/'+row.file_type   
+				     
+				});
+			}else if(row.file_type=="pdf"){
+				$('#originalview').panel("close");
+								 
+			}
+			*/
+			$('#originalview').attr("src","admin/jxnr/video/view/${jxnr_id}-"+row.id);
+
+			
+		}
+	});
+
+
+})
+
+
+function OriginalCreate(){
+	$('#originalUpload').dialog('open'); 
+}
+
+function OriginalOnload(){
+	 $('#originallist').datagrid('reload'); 
+}
+
+function OriginalDelete(){
+	var rows = $('#originallist').datagrid('getSelections');
+	if(rows.length>0){
+		/*
+		$.messager.show({
+            title: "提示",
+            msg: rows
+        });
+		*/
+		
+        $.messager.confirm('确认', '确定删除当前'+rows.length+'条数据?', function(re) {
+            if (re) {
+            	var ids = [];
+                for (var i = 0; i < rows.length; i++) {
+                    ids.push(rows[i].id);
+                }
+                $.post('admin/jxnr/video/delete/${jxnr_id}', {ids: ids.join(',')}, function(r) {
+                    if (r.success) {
+                        $.messager.show({// show error message
+                            title: '提示',
+                            msg: r.msg
+                        });
+                        $('#originallist').datagrid('reload');    // reload the user data
+                    } else {
+                        $.messager.show({// show error message
+                            title: 'Error',
+                            msg: r.msg
+                        });
+                    }
+                }, 'json');
+            }
+        });
+	         
+	}	
+	
+}
+
+function OriginalDownload(){
+	var rows = $('#originallist').datagrid('getSelections');
+	if(rows.length>0){
+		
+        $.messager.confirm('确认', '确定下载当前'+rows.length+'条数据?', function(re) {
+            if (re) {
+            	var ids = [];
+                for (var i = 0; i < rows.length; i++) {
+                    ids.push(rows[i].id);
+                }
+                //$.post('archive/originalzip/${is_category_id}/${archive_id}', {ids: ids.join(',')}, function() {}, 'json');
+            	var form=$("<form>");//定义一个form表单
+				form.attr("style","display:none");
+				form.attr("target","");
+				form.attr("method","post");
+				form.attr("action","archive/originalzip/${is_category_id}/${archive_id}");
+				var input1=$("<input>");
+				input1.attr("type","hidden");
+				input1.attr("name","ids");
+				input1.attr("value",ids.join(','));
+				$("body").append(form);//将表单放置在web中
+				form.append(input1);
+				form.submit();//表单提交
+            }
+        });
+	         
+	}else{
+		$.messager.show({// show error message
+            title: 'Error',
+            msg: '请选择要下载的文件'
+        });
+	}	
+	
+}
+	</script>
+</head>
+<body id="cc" class="easyui-layout">   
+	<div data-options="region:'west',title:'视频列表',split:true" style="width:240px;">
+		<div style="padding:5px 0;">
+			<iframe id="originaldownload" src=""  boder="0" width="99%" height="98%" style="display:none"></iframe>
+		 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="" style="width:40px" onclick="OriginalCreate()">新增</a>
+		 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="" style="width:40px" onclick="OriginalDelete()">删除</a>
+		 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="" style="width:40px" onclick="">上移</a>
+		 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="" style="width:40px" onclick="">下移</a>
+		 	<a href="javascript:void(0)" class="easyui-linkbutton" data-options="" style="width:40px" onclick="OriginalDownload()">下载</a>
+		</div>
+		<table  id="originallist" class="easyui-datagrid" title="" fit="true" style=""
+				data-options="rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,
+				toolbar:'#toolbar',nowrap:false,striped:true,
+				url:'admin/jxnr/video/list/${jxnr_id}'
+				">
+			
+			<thead>
+				
+				<tr>
+					<th data-options="field:'ck',checkbox:true"></th>	
+					<th data-options=" field:'file_name',width:150,align:'center',halign:'center',">标题</th>
+					
+				</tr>
+				
+			</thead>
+		
+		</table>
+		
+		<div id="originalUpload" class="easyui-dialog" title="文件上传"  style="width:400px;height:400px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false,onClose:function(){OriginalOnload()}">
+	        
+	        <div id="uploader" class="wu-example">
+			    <!--用来存放文件信息-->
+			    <div id="thelist" class="uploader-list"></div>
+			    <div class="btns">
+			        <div id="picker" >请选择文件</div>
+			        <button id="ctlBtn" class="btn btn-default">开始上传</button>
+			    </div>
+			</div>
+			
+		</div>
+	</div>   
+    <div data-options="region:'center',title:'视频信息'" style="padding:0px;">
+    	<iframe id="originalview" src=""  boder="0" width="99%" height="98%" ></iframe>
+    	
+    </div>
+	
+</body>
+</html>

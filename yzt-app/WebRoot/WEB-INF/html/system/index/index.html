@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+#include("../common/header.html")
+<script type="text/javascript">
+function targetCenter(id){
+	$("#dataCenter").panel({
+		
+		href:"system/"+id
+	});
+
+}
+
+</script>
+</head>
+<body class="easyui-layout">
+	<div data-options="region:'north',split:true" style="height: 100px;">
+		欢迎光临${sessionScope.loginSysUser.is_username?!''}</div>
+	<div data-options="region:'west',title:'导航',split:true" style="width: 200px;">
+		<div id="aa" class="easyui-accordion" data-options="fit:true,border:false" >
+			<div title="数据中心" data-options="iconCls:'icon-save',selected:true" style="overflow: auto; padding: 0px;">
+				<ul id="zaojiaozhongxin" class="easyui-datalist" data-options="fitColumns:true,lines:true,onClickRow:function(index, row){targetCenter(row.value);}" >
+			        <li value="learningcenter">早教中心列表</li>
+			        <li value="choicenesscontent">精选内容列表</li>
+			        <li value="indexlogo">首页早教中心LOGO</li>
+			        <li value="indexpic">首页轮播图设置</li>
+			        <li value="indexvideo">首页视频推荐设置</li>
+			        <li value="indexchoicenesscontent">首页精选推荐设置</li>
+			    </ul>
+			</div>
+			
+			<div title="系统设置" data-options="iconCls:'icon-reload'" style="padding: 0px;">
+				<ul id="systemset" class="easyui-datalist" data-options="fitColumns:true,lines:true,onClickRow:function(index, row){targetCenter(row.value);}" >
+			        <li value="dictionary">字典设置</li>
+			        
+				</ul>
+			</div>
+			
+			<div title="权限设置" data-options="iconCls:'icon-reload'" style="padding: 0px;">
+				<ul id="systemset" class="easyui-datalist" data-options="fitColumns:true,lines:true,onClickRow:function(index, row){targetCenter(row.value);}" >
+			        <li value="sysuser">系统用户</li>
+			        <li value="manageuser">后台用户</li>
+			       
+				</ul>
+			</div>
+			
+		</div>
+	</div>
+	<div id="dataCenter" data-options="region:'center'" style="padding: 3px;">
+		
+	
+	</div>
+
+</body>
+</html>

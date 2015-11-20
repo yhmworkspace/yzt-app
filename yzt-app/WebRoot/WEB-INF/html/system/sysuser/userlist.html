@@ -1,0 +1,58 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#archivelist').datagrid({
+		url:'admin/sysuser/listjson',
+		onClickRow:function(rowIndex,row){
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			//$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			//$('#archiveadd').window('refresh','archive/archiveview/${table_name }/'+row.recid);
+		},
+		remoteFilter:true
+	});
+	$('#archivelist').datagrid('enableFilter');
+});
+
+
+</script>
+<input type="hidden" id="category_id" name="category_id" value="sysuser"></input> 
+<table id="archivelist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar',nowrap:false,striped:true
+							,sortName:'create_time',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'is_username',width:150,align:'center',halign:'center',sortable:true">姓名</th>
+				<th data-options=" field:'is_account',width:150,align:'left',halign:'center',sortable:true">账号</th>
+				<th data-options=" field:'is_password',width:300,align:'left',halign:'center',sortable:true">密码</th>
+				<th data-options=" field:'is_role',width:150,align:'center',halign:'center',sortable:true,formatter:formatter_userrole">角色</th>
+				<th data-options=" field:'is_status',width:80,align:'center',halign:'center',sortable:true,formatter:formatter_userstatus">状态</th>	
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="archiveCreate('archivelist')">增加</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"  onclick="archiveEdit('archivelist')">修改</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="archiveRemove('archivelist')">删除</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="setOverdue(1)">解禁</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="setOverdue(0)">禁用</a>
+		</div>
+	</div>
+	
+	<div id="archiveadd" class="easyui-window"  style="width:700px;height:500px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	        
+	</div>
+	
+	
+<div id="prePic_dialog" class="easyui-dialog" title="图片预览"  style="width:400px;height:400px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	<div>
+	        <img id="pic_url" alt="" src="" />
+	</div>
+</div>

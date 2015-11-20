@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztIntegralDetailMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztIntegralDetail">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="yzt_user_id" jdbcType="VARCHAR" property="yztUserId" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="content_datetime" jdbcType="VARCHAR" property="contentDatetime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="integral_count" jdbcType="INTEGER" property="integralCount" />
+    <result column="integral_value" jdbcType="INTEGER" property="integralValue" />
+    <result column="task_id" jdbcType="VARCHAR" property="taskId" />
+    <result column="cdkey_id" jdbcType="VARCHAR" property="cdkeyId" />
+    <result column="cdkey_code" jdbcType="VARCHAR" property="cdkeyCode" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+  </resultMap>
+</mapper>

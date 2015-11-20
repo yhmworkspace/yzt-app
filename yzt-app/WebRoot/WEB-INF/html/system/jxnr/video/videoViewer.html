@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html >
+  <head>
+  <base href="${WebRoot}/">
+
+  <body >
+  #--
+     <div class="player">
+        <video poster="" controls crossorigin>
+            <!-- Video files -->
+            <source src="archive/originalview/${category_id}/${archive_id}/${id}" type="video/mp4">
+            
+           
+            <source src="https://cdn.selz.com/plyr/1.0/movie.webm" type="video/webm">
+            
+            <!-- Text track file -->
+            <track kind="captions" label="English" srclang="en" src="https://cdn.selz.com/plyr/1.0/example_captions_en.vtt" default>
+            
+            <!-- Fallback for browsers that don't support the <video> element -->
+            <a href="https://cdn.selz.com/plyr/1.0/movie.mp4">Download</a>
+           
+        </video>
+    </div>
+	<script src="static/plyr/plyr.js"></script>
+	
+	--#
+	<div style="margin:0 auto">
+    <script type="text/javascript" src="js/plyr/sewise.player.min.js"></script>
+        <script type="text/javascript">
+            SewisePlayer.setup({
+                server: "vod",
+                type: "mp4",
+                videourl: "admin/zjzx/video/display/${zjzx_id}-${pic_id}",
+                skin: "vodWhite",
+                title: "",
+                lang: 'zh_CN'
+                
+            });
+        </script>
+	</div>
+  </body>
+</html>
+

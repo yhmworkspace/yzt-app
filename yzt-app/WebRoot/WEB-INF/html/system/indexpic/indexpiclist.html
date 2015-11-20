@@ -1,0 +1,60 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#archivelist').datagrid({
+		url:'system/indexpic/listjson',
+		onClickRow:function(rowIndex,row){
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			//$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			//$('#archiveadd').window('refresh','archive/archiveview/${table_name }/'+row.recid);
+		},
+		remoteFilter:true
+	});
+	$('#archivelist').datagrid('enableFilter');
+});
+
+
+</script>
+<input type="hidden" id="category_id" name="category_id" value="indexpic"></input> 
+<table id="archivelist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar',nowrap:false,striped:true
+							,sortName:'weight',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'maintitle',width:150,align:'center',halign:'center',sortable:true">标题</th>
+				<th data-options=" field:'logoHref',width:150,align:'left',halign:'center',sortable:true">跳转地址</th>
+				<th data-options=" field:'logoUrl',width:300,align:'left',halign:'center',sortable:true,formatter:showValue">图片地址</th>
+				<th data-options=" field:'startTime',width:150,align:'center',halign:'center',sortable:true">生效时间</th>
+				<th data-options=" field:'endTime',width:150,align:'center',halign:'center',sortable:true">失效时间</th>
+				<th data-options=" field:'weight',width:70,align:'center',halign:'center',sortable:true">权重</th>	
+				<th data-options=" field:'status',width:80,align:'center',halign:'center',sortable:true,formatter:formatter_status">状态</th>	
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="archiveCreate('archivelist')">增加</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-edit" plain="true"  onclick="archiveWeight('archivelist')">权重</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-remove" plain="true" onclick="archiveRemove('archivelist')">删除</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="setOverdue(1)">设为有效</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="setOverdue(0)">设为失效</a>
+		</div>
+	</div>
+	
+	<div id="archiveadd" class="easyui-window"  style="width:700px;height:500px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	        
+	</div>
+	
+	
+<div id="prePic_dialog" class="easyui-dialog" title="图片预览"  style="width:400px;height:400px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	<div>
+	        <img id="pic_url" alt="" src="" />
+	</div>
+</div>

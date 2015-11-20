@@ -1,0 +1,458 @@
+
+<div id="toolbars"> 
+	<form id="choicenessSearchForm"  method="post" style="padding: 5px;">
+		权重:   <input  id="weight" name="weight" class="easyui-validatebox">
+		标题:   <input  id="maintitle" name="maintitle" class="easyui-validatebox">
+	    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="choicenessSearch_from()">搜索</a>  
+	    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="choiceness_addObj()">添加</a> 
+  	</form> 
+</div> 
+
+<div id="choiceness_mmData" class="easyui-menu" style="width:120px;">
+	<div onclick="chodetail_obj()" data-options="ocpmCls:'icon-search'">查看详情</div>
+    <div onclick="choiceness_editObj()" data-options="iconCls:'icon-edit'">编辑</div>
+    <div onclick="choiceness_delObj()" data-options="iconCls:'icon-remove'">删除</div>  
+</div>
+ <!-- queryParams: form2Json('choicenessSearchFrom'), -->
+<div id="choiceness_grid" class="easyui-datagrid" data-options="
+		toolbar: '#toolbars',
+		rownumbers: true,
+        animate: true,
+        title:'精选内容列表',
+        collapsible: true,
+        fitColumns: true,
+        pagination:true,
+        singleSelect:true,
+        sortName:'id',
+        sortOrder:'desc',
+        url: 'system/choicenesscontent/list',
+        loader: function(param,success,error){
+        	var that = $(this);  
+		    var opts = that.datagrid('options');  
+		    if (!opts.url) {  
+		        return false;  
+		    }
+			var searchParam = $('#choicenessSearchForm').form('getData');
+	   		searchParam.weight = $('#weight').val();
+	   		searchParam.maintitle = $('#maintitle').val();
+	   		param.others = searchParam;
+		   	$.toPost(opts.url, param, success, error);
+        },
+        columns: [[
+            {field:'id',title:'id',width:15}
+            ,{field:'maintitle',title:'标题',width:7}
+            ,{field:'weight',title:'权重',width:7}
+            ,{field:'is_pic_count',title:'图片',width:7}
+            ,{field:'is_video_count',title:'视频',width:7}
+			,{field:'viewCount',title:'点击量',width:7}
+			,{field:'createtime',title:'创建时间',width:20,formatter: function (value, row, index) {
+                     return formatDate(value);
+                 }
+           }
+
+        ]]
+		,onRowContextMenu: function(e, rowIndex, rowData){
+            e.preventDefault();
+            $(this).datagrid('selectRow', rowIndex);
+            $('#choiceness_mmData').menu('show',{
+                left: e.pageX,
+                top: e.pageY
+            });
+        },
+        onSelect: function(rowIndex, rowData){
+            
+        }
+"></div>
+
+<div id="chodetail_Dlg" class="easyui-dialog" data-options="
+		width: dlg_width,
+		height: dlg_height,
+		left: dlg_left,
+		top:dlg_top,
+		closed:true,
+		modal:true,
+		resizable:true,
+		buttons:[{
+			text:'取消',
+			handler:function(){
+				$('#chodetail_Dlg').dialog('close');
+			}
+		}]
+">
+<div class="easyui-layout" data-options="fit:true" style="">
+<form id="chodetail_Form" name="archiveinfo" method="post" > 	
+
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+  
+     <table cellpadding="5"  class="in-tb margin-top5" >
+     			<tr>
+                	<td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"><input name="weight" class="easyui-textbox"  disabled="disabled"></input></td>
+                
+                </tr>
+                <tr>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt" colspan="3"><input name="maintitle" class="easyui-textbox" disabled="disabled"></input></td>
+                </tr>
+             
+                <tr>
+                    <td class="in-lab" width="100px">联系电话:</td>
+                    <td class="in-ctt" colspan="3"><input name="contactPhone" class="easyui-textbox"  style="width:400px" disabled="disabled"></input>&nbsp;多个以分号隔开</td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">开始时间:</td>
+                    <td class="in-ctt" ><input name="startTime" class="easyui-textbox" disabled="disabled"></input></td>
+                	<td class="in-lab" width="100px">结束时间:</td>
+                	<td class="in-ctt" ><input name="endTime" class="easyui-textbox" disabled="disabled"></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">地理位置:</td>
+                    <td class="in-ctt" colspan="3">
+	           		              省份:<input  name="province" class="easyui-textbox" style="width:70px;" disabled="disabled"/>   
+                    	区县:	<input  name="district"  class="easyui-textbox" style="width:100px;" disabled="disabled"/>
+                       	商圈:<input  name="circle" class="easyui-textbox" style="width:100px;" disabled="disabled"/>
+                       	区:<input  name="district" class="easyui-textbox" style="width:100px;" disabled="disabled"/>
+                       	街道:<input name="street" class="easyui-textbox" style="width:100px;" disabled="disabled"/>
+                      	建筑物:<input  name="building" class="easyui-textbox" style="width:150px;" disabled="disabled"/>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td class="in-lab" >经度:</td>
+                    <td class="in-ctt"><input name="longitude"  class="easyui-textbox" disabled="disabled"></input></td>
+                    <td class="in-lab">纬度:</td>
+                    <td class="in-ctt"><input name="latitude"  class="easyui-textbox" disabled="disabled"></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab">最低年龄:</td>
+                    <td class="in-ctt">
+                    	<input name="minAge"  class="easyui-textbox" disabled="disabled"></input>
+                    </td>
+                    <td class="in-lab">最高年龄:</td>
+                    <td class="in-ctt">
+                    	<input name="maxAge"  class="easyui-textbox" style="width:100px;" disabled="disabled"></input>
+                    </td>
+                </tr>
+                
+                 <tr>
+                    <td class="in-lab">分类:</td>
+                    <td class="in-ctt" colspan="3"><input name="eduType"  class="easyui-textbox" style="width:100px;" style="width:250px" disabled="disabled"></input><br/>
+                    
+                    </td>
+                </tr>
+              <!--   <tr>
+                    <td class="in-lab">内容编辑:</td>
+                    <td class="in-ctt" colspan="3">
+                    	<textarea  name="introduction" cols="100" rows="8" style="width:700px;height:300px;visibility:hidden;"></textarea>
+                    </td>
+                </tr> -->
+                <tr><td></td></tr>
+        </table> 
+
+</div>
+</form> 
+</div> 
+</div>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////修改//////////////////////////////////////////////////////////////////////////////// -->
+<div id="choiceness_editDlg" class="easyui-dialog" data-options="
+		width: dlg_width,
+		height: dlg_height,
+		left: dlg_left,
+		top:dlg_top,
+		closed:true,
+		modal:true,
+		resizable:true,
+		buttons:[{
+			text:'保存',
+			handler:function(){
+				choiceness_save();
+			}
+		},{
+			text:'取消',
+			handler:function(){
+				$('#choiceness_editDlg').dialog('close');
+			}
+		}]
+">
+<div class="easyui-layout" data-options="fit:true" style="">
+<form id="choiceness_editForm"  method="post" > 	
+<input type="hidden" name="id" />
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+     <table cellpadding="5"  class="in-tb margin-top5" >
+      
+     			<tr>
+                	<td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"><input name="weight" class="easyui-textbox" data-options="required:true" ></input></td>
+                
+                </tr>
+                <tr>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt" colspan="3"><input name="maintitle" class="easyui-textbox" data-options="required:true"  style="width:90%;height:30px"></input></td>
+                </tr>
+              
+                <tr>
+                    <td class="in-lab" width="100px">联系电话:</td>
+                    <td class="in-ctt" colspan="3"><input name="contactPhone" class="easyui-textbox" data-options="required:true"  style="width:400px"></input>&nbsp;多个以|隔开</td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">开始时间:</td>
+                    <td class="in-ctt" ><input name="startTime" class="easyui-datebox" data-options="" ></input></td>
+                	<td class="in-lab" width="100px">结束时间:</td>
+                	<td class="in-ctt" ><input name="endTime" class="easyui-datebox" data-options="" ></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">地理位置:</td>
+                    <td class="in-ctt" colspan="3">
+                   		省：<select id="cmbProvince" name="province"></select>
+						市：<select id="cmbCity" name="city"></select>
+						区：<select id="cmbArea" name="district"></select>
+					
+					<script type="text/javascript">
+						addressInit('cmbProvince', 'cmbCity', 'cmbArea');
+					</script>
+						地址：<input type="text" id ="buildingId" onblur="getBusiniss();" name="street">
+	                    <!-- <input id="buildingId" name="building" onclick="getBusiniss();" type="text" class="easyui-textbox" style="width:100px;" data-options="prompt:'建筑物'" /> -->
+	                   <!--   <input   style="width:100px;" data-options="prompt:'商圈'" disabled="disabled"/> -->
+	                  	   商圈：<input type="text"   id="businissCircleId" name="businissCircle"  style="width:200px;">
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td class="in-lab" >经度:</td>
+                    <td class="in-ctt"><input name="longitude" id="longitudeId" class="easyui-textbox" ></input></td>
+                    <td class="in-lab">纬度:</td>
+                    <td class="in-ctt"><input name="latitude" id="latitudeId" class="easyui-textbox" ></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab">最低年龄:</td>
+                    <td class="in-ctt">
+                    	<select class="easyui-combobox" name="minAge"  style="width:100px;">
+					        <option value="0">0岁</option>
+					        <option value="1">1岁</option>
+					        <option value="2">2岁</option>
+					        <option value="3">3岁</option>
+					        <option value="4">4岁</option>
+					        <option value="5">5岁</option>
+					        <option value="6">6岁</option>
+					        <option value="7">7岁</option>
+					        <option value="8">8岁</option>
+					        <option value="9">8岁</option>
+					        <option value="10">10岁</option>
+					        <option value="11">11岁</option>
+					        <option value="12">12岁</option>
+					        <option value="13">13岁</option>
+					        <option value="14">14岁</option>
+					        <option value="15">15岁</option>
+					        <option value="16">16岁</option>
+					        <option value="17">17岁</option>
+					        <option value="18">18岁</option>
+					     </select>
+                    </td>
+                    <td class="in-lab">最高年龄:</td>
+                    <td class="in-ctt">
+                    	<select class="easyui-combobox" name="maxAge" style="width:100px;">
+					        <option value="0">0岁</option>
+					        <option value="1">1岁</option>
+					        <option value="2">2岁</option>
+					        <option value="3">3岁</option>
+					        <option value="4">4岁</option>
+					        <option value="5">5岁</option>
+					        <option value="6">6岁</option>
+					        <option value="7">7岁</option>
+					        <option value="8">8岁</option>
+					        <option value="9">8岁</option>
+					        <option value="10">10岁</option>
+					        <option value="11">11岁</option>
+					        <option value="12">12岁</option>
+					        <option value="13">13岁</option>
+					        <option value="14">14岁</option>
+					        <option value="15">15岁</option>
+					        <option value="16">16岁</option>
+					        <option value="17">17岁</option>
+					        <option value="18">18岁</option>
+					     </select>
+                    </td>
+                </tr>
+                
+                 <tr>
+                    <td class="in-lab">分类:</td>
+                    <td class="in-ctt" colspan="3" id="eduTypeId">
+	                  <input type="checkbox" name="eduType"  value="亲子游">亲子游
+						<input type="checkbox" name="eduType"  value="儿童教育">儿童教育
+						<input type="checkbox" name="eduType"  value="舞台剧">舞台剧
+						<input type="checkbox" name="eduType"  value="亲子课堂">亲子课堂
+					</td>
+					<!-- <td class="in-ctt" colspan="3" >
+                    	<input type="text" id="edutypeId" name="eduType">
+					</td> -->
+                </tr>
+                <tr>
+                    <td class="in-lab">内容编辑:</td>
+                    <td class="in-ctt" colspan="3">
+                    	<textarea  id="introductionId" name="introduction" cols="100" rows="8" style="width:700px;height:300px;"></textarea>
+                    </td>
+                </tr>
+                <tr><td></td></tr>
+                
+             
+        </table> 
+
+</div>
+</form> 
+</div> 
+</div>
+
+
+<script type="text/javascript">
+myGeo = new BMap.Geocoder();
+var index = 0;
+var adds = [];
+function getBusiniss(){
+	var buidval = $('#buildingId').val();
+	adds[0] = buidval; 
+	bdGEO(adds);
+}
+
+
+function bdGEO(adds){
+    var a = adds[index];
+    geocodeSearch(a,index,adds);
+    index++;
+}
+
+function geocodeSearch(a,index,adds){
+    if(index < adds.length){
+        setTimeout(window.bdGEO,300);
+    } 
+    myGeo.getPoint(a, function(point){
+      if (point) {
+        myGeo.getLocation(point, function(rs){
+                var addComp = rs.addressComponents;
+             	$('#businissCircleId').val(rs.business);
+             	$("#longitudeId").textbox('setValue',point.lng)
+             	$("#latitudeId").textbox('setValue',point.lat)
+            });
+      }
+    });
+}
+
+
+function choiceness_save(){
+	if(!$('#choiceness_editForm').form('validate')) return;
+	var form = $('#choiceness_editForm').form('getData');
+	/* var introval = $('#introductionId').val();
+	console.log(introval); */
+	$.toPost("system/choicenesscontent/save",form,function(data){
+		if(data.json.success){
+			$.messager.alert('提示',data.json.msg,'info');
+			$('#choiceness_editDlg').dialog('close');
+			$('#choiceness_grid').datagrid('reload');
+		}else{
+			$.messager.alert('提示',datajson.msg,'info');
+		}
+	});
+}
+
+function choiceness_addObj(){
+ 	$('#choiceness_editForm').form('clear');
+	$("#choiceness_editDlg").dialog('open').dialog('setTitle','增加'); 
+	kindEditor();
+}
+
+/* function getEdu_type(){
+	$.toPost("system/choicenesscontent/getedu_type",null,function(data){
+		console.log(data);
+		if(data.success){
+			for(var i = 0; i < data.obj.length; i++){
+				var ss = "<input type='checkbox' name='edutype'  value='"+data.obj[i].dicName+"'>"+data.obj[i].dicName+"";
+				console.log(ss);
+				$('#eduTypeId').append(ss);
+			}			
+		}
+		},function(){
+			$.messager.alert('错误', "请求服务器失败!");
+		});
+} */
+
+function kindEditor(){
+		var editor1 = KindEditor.create('textarea[id="introductionId"]', {
+		/* cssPath : 'static/kindeditor/plugins/code/prettify.css', */
+		uploadJson : 'system/choicenesscontent/fileUpload',
+	    allowUpload : true, //允许上传图片
+   	 	/* imageUploadJson : '/saveImg' ,//服务端上传图片处理URI */
+		allowPreviewEmoticons : true,
+		allowImageUpload : true,
+ 		afterCreate : function() {
+			this.sync();
+		},
+		afterBlur : function() {
+			this.sync();
+		},
+		   afterChange: function(){ //编辑器内容发生变化后，将编辑器的内容设置到原来的textarea控件里
+              this.sync();  
+       }
+			
+	});
+	   $(document.getElementsByTagName('iframeName')[0].contentWindow.document.body).html(data);
+	/* prettyPrint(); */
+	
+}
+	
+	 
+
+//编辑
+function choiceness_editObj(){
+	/* $.parser.parse('#introductionId'); */
+	var row = $('#choiceness_grid').datagrid('getSelected');
+	if(row){
+		$('#choiceness_editForm').form('clear');
+		$('#introductionId').val("");
+		if(row.eduType!=null&&row.eduType.indexOf(",")>0){
+			row.eduType = row.eduType.split(',');
+		}
+		$('#choiceness_editForm').form('load',row);
+		console.log(row);
+		$("#choiceness_editDlg").dialog('open').dialog('setTitle','修改');
+	}
+		kindEditor();
+		
+}
+
+function chodetail_obj(){
+var row = $('#choiceness_grid').datagrid('getSelected');
+	if(row){
+		$('#chodetail_Form').form('clear');
+		$('#chodetail_Form').form('load',row);
+		$("#chodetail_Dlg").dialog('open').dialog('setTitle','查看详情');
+	}
+}
+ 
+//删除
+function choiceness_delObj(){
+	var row = $('#choiceness_grid').datagrid('getSelected');
+	$.messager.confirm('确认','确认要删除所选列吗?',function(r){
+        if (r){
+			$.toPost("system/choicenesscontent/del",{id:row.id},function(data){
+				if(data.success){
+					$.messager.alert('提示', "删除成功!");
+					$('#choiceness_grid').datagrid('reload');
+				}else{
+					$.messager.alert('提示', "删除失败!");
+				}
+			},function(){
+				$.messager.alert('错误', "请求服务器失败!");
+			});
+        }
+    });
+}
+
+
+function choicenessSearch_from(){
+    $('#choiceness_grid').datagrid('reload',{pageNumber:1});
+}
+	
+
+
+</script>

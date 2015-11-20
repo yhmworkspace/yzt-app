@@ -1,0 +1,142 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#tasklist').datagrid({
+		url:'task/listjson',
+		remoteFilter:true
+	});
+	$('#tasklist').datagrid('enableFilter');
+});
+
+function taskCreate(){
+	$('#ff_task').form('clear');
+	$('#taskadd').window('open').dialog('setTitle', '新增');
+}
+
+
+
+
+//$('#ff').submit();  
+function submitTask(){
+	var userurl ="task/save/";
+	
+	
+    //$('#'+ff).submit();
+    $('#ff_task').form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    	$('#taskadd').window('close');
+		   $('#tasklist').datagrid('reload'); 
+		    
+	    }    
+	});     
+}
+
+function taskRemove() {
+	 var rows = $('#tasklist').datagrid('getSelections');
+		 //alert(rows.length);
+		 if(rows.length > 0){
+			
+			 $.messager.confirm('确认', '确定删除当前'+rows.length+'条数据?', function(re) {
+		            if (re) {
+		            	var ids = [];
+		                for (var i = 0; i < rows.length; i++) {
+		                    ids.push(rows[i].id);
+		                }               
+		                $.post('task/delete', {ids: ids.join(',')}, function(r) {
+		                   
+		                       $('#tasklist').datagrid('reload');    // reload the user data
+		                    
+		                }, 'json');
+		            }
+		        });
+		 }
+}
+
+function taskTrigger(){
+ var row = $('#tasklist').datagrid('getSelected');
+ if(row){
+ 	$.messager.prompt('提示信息', '请输入你的id：', function(r){
+		if (r){
+			//alert('你的id是：' + r);
+			console.info('user/integral/earn/'+r+'/'+row.id);
+			$.post('user/integral/earn/'+r+'/'+row.id,{},  function(rs) {
+               //console.info(rs);
+                   //$('#tasklist').datagrid('reload');    // reload the user data
+                $.messager.show({
+		            title: "提示",
+		            msg: rs.msg
+		        });
+            }, 'json');
+		}
+	});
+ }
+	
+
+	
+}
+
+</script>
+ 
+	<table id="tasklist" data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,
+					ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbartask',
+					nowrap:false,striped:true,sortName:'taskType',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'name',width:150,align:'center',halign:'center',sortable:true">名称</th>
+				<th data-options=" field:'integralValue',width:100,align:'center',halign:'center',sortable:true">糖果</th>
+				<th data-options=" field:'endtime',width:100,align:'center',halign:'center',sortable:true">过期时间</th>
+				<th data-options=" field:'taskType',width:150,align:'center',halign:'center',sortable:true">类型</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbartask" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="taskCreate()">新增</a>
+			#--
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="cdkeyEdit()">修改</a>
+			--#
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="taskRemove()">删除</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="taskTrigger()">模拟触发</a>
+		
+		</div>
+	</div>
+	
+	<div id="taskadd" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+		<form id="ff_task" action="" method="post">
+		<table cellpadding="5">
+          <tr>
+	        <td>名称：</td><td><input name="name" class="easyui-textbox" data-options="required:true" value=""></input>  </td>
+	      </tr>
+	      <tr>
+	        <td>糖果值：</td><td><input name="integralValue" class="easyui-textbox" data-options="required:true" value=""></input>  </td>
+	      </tr>
+	      <tr>
+	        <td>结束时间：</td><td><input name="endtime" class="easyui-datebox" data-options="required:true" value=""></input>  </td>
+	      </tr>
+	      <tr>
+	        <td>任务类型：</td><td><select  class="easyui-combobox" name="taskType" data-options="panelHeight:60" style="width:100px;">   
+					    <option value="1">每日任务</option>   
+					    <option value="2">进阶任务</option>   
+					      </select>
+					  </td>
+	      </tr>
+	      
+	      <tr>
+	      	<td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitTask()">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	    </table>
+		</form>
+	</div>

@@ -1,0 +1,107 @@
+<script type="text/javascript">
+$(function(){
+	$('#archivelist').datagrid({
+		url:'system/choicenesscontent/listjson',
+		onClickRow:function(rowIndex,row){
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			 openWindow("system/choicenesscontent/view/"+row.id);
+			
+		},
+		remoteFilter:true
+	});
+	$('#archivelist').datagrid('enableFilter');
+});
+
+function addJxnr(archivelist){
+	var categoryid = $('#category_id').val();
+	var row = $('#'+archivelist).datagrid('getSelected');
+	 if(row !=null){
+		 openWindow('system/'+categoryid+'/add/'+row.id);
+	 }else{
+		 openWindow('system/'+categoryid+'/add');
+	 }
+}
+
+function editJxnr(archivelist){
+	var categoryid = $('#category_id').val();
+	var rows = $('#'+archivelist).datagrid('getSelections');
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+		 var row = $('#'+archivelist).datagrid('getSelected');
+		 openWindow('system/'+categoryid+'/edit/'+row.id);
+	 }
+ 
+}
+function showCollected(value,row,index){
+	return "<a href=\"javascript:void(0);\" onclick=\"openDialog('choicenesscontent/collected/html/"+row.id+"');\">"+value+"</a>";
+
+} 
+function openDialog(url){
+	$('#archiveadd').window('open').dialog('setTitle', '用户列表');
+	$('#archiveadd').window('refresh',url);
+}
+
+</script>
+<input type="hidden" id="category_id" name="category_id"
+	value="choicenesscontent"></input>
+<table id="archivelist" style=""
+	data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar',nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'desc'">
+
+	<thead>
+		<tr>
+			<th data-options="field:'ck',checkbox:true"></th>
+			<th
+				data-options=" field:'maintitle',width:150,align:'center',halign:'center',sortable:true">标题</th>
+			<th
+				data-options=" field:'choicenesscontentId',width:150,align:'center',halign:'center',sortable:true">精选内容id</th>
+			<th
+				data-options=" field:'createtime',width:150,align:'center',halign:'center',sortable:true,formatter:cellDate">创建时间</th>
+			<th
+				data-options=" field:'picCount',width:60,align:'center',halign:'center',sortable:true,formatter: showPic">图片</th>
+			#--
+			<th
+				data-options=" field:'is_video_count',width:60,align:'center',halign:'center',sortable:true,formatter: showVideo">视频</th>
+			--#
+			<th
+				data-options=" field:'viewCount',width:60,align:'center',halign:'center',sortable:true">点击量</th>
+			<th
+				data-options=" field:'comments',width:150,align:'center',halign:'center',sortable:true">评论分</th>
+			<th
+				data-options=" field:'commentsCount',width:150,align:'center',halign:'center',sortable:true,formatter: showComments">评论数</th>
+			<th
+				data-options=" field:'weight',width:50,align:'center',halign:'center',sortable:true">权重</th>
+			<th
+				data-options=" field:'collectedCount',width:100,align:'center',halign:'center',sortable:true,formatter: showCollected">已被收藏</th>
+		</tr>
+	</thead>
+</table>
+
+<div id="toolbar" style="padding:3px;height:auto">
+	<div style="margin-bottom:5px">
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-add" plain="true"
+			onclick="addJxnr('archivelist');//archiveCreate('archivelist')">增加</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-edit" plain="true" onclick="editJxnr('archivelist')">修改</a>
+		<a href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-edit" plain="true"
+			onclick="archiveWeight('archivelist')">权重</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton"
+			iconCls="icon-remove" plain="true"
+			onclick="archiveRemove('archivelist')">删除</a> #-- <a
+			href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok"
+			plain="true" onclick="moveDictionary('up')">上移</a> <a
+			href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok"
+			plain="true" onclick="moveDictionary('dn')">下移</a> --#
+	</div>
+</div>
+
+<div id="archiveadd" class="easyui-window"
+	style="width:700px;height:500px"
+	data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+
+</div>

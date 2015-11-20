@@ -1,0 +1,23 @@
+<table id="archivelogdg" class="easyui-datagrid" title="" fit="true" style="width:705px;height:250px"
+			data-options="rownumbers:true,idField:'id',singleSelect:true,nowrap:false">
+		
+		<thead>
+			
+			<tr>
+				<th data-options=" field:'user_name',width:100,align:'center',halign:'center',sortable:true">操作人</th>
+				<th data-options=" field:'operation',width:100,align:'center',halign:'center',sortable:true">操作</th>
+				<th data-options=" field:'field_cn_name',width:100,align:'center',halign:'center',sortable:true">字段名称</th>
+				<th data-options=" field:'old_value',width:150,align:'center',halign:'center',sortable:true">旧值</th>
+				<th data-options=" field:'new_value',width:150,align:'center',halign:'center',sortable:true">新值</th>
+				<th data-options=" field:'create_time',width:150,align:'center',halign:'center',sortable:true">操作时间</th>
+			</tr>
+		</thead>
+		<tbody>
+		  
+			#for(LogArchive log : loglist) 
+	        <tr>   
+	           <td>${log.user_name}</td><td>${log.operation}</td><td>${log.field_cn_name}</td><td>${log.old_value}</td><td>${log.new_value}</td><td>${log.create_time}</td>  
+	        </tr>   
+	       #end  
+	    </tbody>  
+	</table>

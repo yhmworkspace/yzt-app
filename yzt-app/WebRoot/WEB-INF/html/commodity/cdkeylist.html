@@ -1,0 +1,124 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#cdkeylist').datagrid({
+		url:'commodity/cdkey/listjson/${commodityId}',
+		rowStyler: function(index,row){
+			if (row.status==0){
+				//return 'background-color:#6293BB;color:#fff;';
+			}
+		},
+
+		onClickRow:function(rowIndex,row){
+			/*单机
+				$.messager.show({
+		            title: "提示",
+		            msg: row.maintitle
+		        });
+			*/
+			
+		}
+		//remoteFilter:true
+	});
+	//$('#cdkeylist').datagrid('enableFilter');
+});
+
+function cdkeyCreate(){
+	clearForm('ff_cdkey');
+	$('#cdkeyadd').window('open').dialog('setTitle', '新增');
+}
+
+
+//$('#ff').submit();  
+function submitCdkey(){
+	var userurl ="commodity/cdkey/save/${commodityId}";
+	
+	
+    //$('#'+ff).submit();
+    $('#ff_cdkey').form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+	    	$('#cdkeyadd').window('close');
+		   $('#cdkeylist').datagrid('reload'); 
+		    
+	    }    
+	});     
+}
+
+function cdkeyRemove() {
+	 var rows = $('#cdkeylist').datagrid('getSelections');
+		 //alert(rows.length);
+		 if(rows.length > 0){
+			
+			 $.messager.confirm('确认', '确定删除当前'+rows.length+'条数据?', function(re) {
+		            if (re) {
+		            	var ids = [];
+		                for (var i = 0; i < rows.length; i++) {
+		                    ids.push(rows[i].id);
+		                }               
+		                $.post('commodity/cdkey/delete', {ids: ids.join(',')}, function(r) {
+		                   
+		                       $('#cdkeylist').datagrid('reload');    // reload the user data
+		                    
+		                }, 'json');
+		            }
+		        });
+		 }
+}
+
+</script>
+ 
+<table id="cdkeylist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbarcdkey',nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'cdkey',width:150,align:'center',halign:'center',sortable:true">兑换码</th>
+		
+				<th data-options=" field:'startTime',width:100,align:'center',halign:'center',sortable:true">生效时间</th>
+				<th data-options=" field:'endTime',width:100,align:'center',halign:'center',sortable:true,formatter: showVideo">过期时间</th>
+				<th data-options=" field:'yztUserId',width:150,align:'center',halign:'center',sortable:true">用户</th>
+				<th data-options=" field:'status',width:60,align:'center',halign:'center',sortable:true,formatter: showComments">状态</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbarcdkey" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="cdkeyCreate()">新增</a>
+			#--
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="cdkeyEdit()">修改</a>
+			--#
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="cdkeyRemove()">删除</a>
+		
+		</div>
+	</div>
+	
+	<div id="cdkeyadd" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+		<form id="ff_cdkey" action="" method="post">
+		<table cellpadding="5">
+          <tr>
+	        <td>兑换码：</td><td><input name="cdkey" class="easyui-textbox" data-options="required:true" value=""></input>  </td>
+	      </tr>
+	      <tr>
+	        <td>开始时间：</td><td><input name="startTime" class="easyui-datebox" data-options="required:true" value=""></input>  </td>
+	      </tr>
+	      <tr>
+	        <td>结束时间：</td><td><input name="endTime" class="easyui-datebox" data-options="required:true" value=""></input>  </td>
+	      </tr>
+	      
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitCdkey()">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+		</form>
+	</div>

@@ -1,0 +1,136 @@
+
+<script type="text/javascript">
+$(function(){
+	$('#feedbacklist').datagrid({
+		url:'user/feedback/listjson/${userId}',
+		onClickRow:function(rowIndex,row){
+			/*单机
+				$.messager.show({
+		            title: "提示",
+		            msg: row.maintitle
+		        });
+			*/
+			
+		},
+		
+		onDblClickRow:function(rowIndex,row){
+			//$('#archiveadd').window('open').dialog('setTitle', '查看数据');
+			//$('#archiveadd').window('refresh','admin/zjzx/view/'+row.id);
+		},
+	});
+});
+
+function feedbackEdit(){
+	var rows = $('#feedbacklist').datagrid('getSelections');
+	 //alert(rows.length);
+	 if(rows.length != 1){
+		 $.messager.alert("提示","请选择一条数据");
+	 }else{
+	 	var row = $('#feedbacklist').datagrid('getSelected');
+		$('#feedback_re').window('open').dialog('setTitle', '修改');
+		$('#ff_re').form('load', row);
+	 }
+}
+
+
+function clearForm(ff){
+    $('#'+ff).form('clear');
+}
+
+function sub_Form(ff){
+	var userurl = "user/feedback/save/${userId}";
+	
+    $('#'+ff).form('submit', {    
+	    url:userurl,    
+	    onSubmit: function(){ 
+	    	//return $(this).form('validate');  
+	    },    
+	    success:function(r){ 
+		    $('#feedback_info').window('close')
+		  //var rs = eval('('+ r +')');    
+	    	//console.info(rs);
+	        $('#feedbacklist').datagrid('reload'); 
+	    }    
+	});     
+}
+
+
+
+function feedbackCreate(){
+	clearForm("ff_feedback");
+	//var row = $('#archivelist').datagrid('getSelected');
+	$('#feedback_info').window('open').dialog('setTitle', '创建');
+	
+}
+function feedbackDelete(){
+	var row = $('#feedbacklist').datagrid('getSelected');
+	$.post('user/feedback/delete/${userId}/'+row.id, function(r) {
+       
+            $('#feedbacklist').datagrid('reload');    // reload the user data
+        
+    }, 'json');
+}
+</script>
+
+<table id="feedbacklist"   style=""
+				data-options="fit:true,rownumbers:true,idField:'id',singleSelect:false,ctrlSelect:true,multiSort:true,pagination:true,toolbar:'#toolbar1',nowrap:false,striped:true
+							,sortName:'createtime',sortOrder:'desc'">
+		
+		<thead>
+			<tr>
+				<th data-options="field:'ck',checkbox:true"></th>
+				<th data-options=" field:'feedbackContent',width:200,align:'center',halign:'center',sortable:true">反馈</th>
+				<th data-options=" field:'createtime',width:80,align:'center',halign:'center',sortable:true,formatter:cellDate">时间</th>
+				<th data-options=" field:'responsecontent',width:200,align:'center',halign:'center',sortable:true">回复</th>
+				<th data-options=" field:'responsetime',width:80,align:'center',halign:'center',sortable:true,formatter:cellDate">回复时间</th>
+			</tr>
+		</thead>
+	</table>
+	
+	<div id="toolbar1" style="padding:3px;height:auto">
+		<div style="margin-bottom:5px">
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="feedbackCreate()">创建</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="feedbackDelete()">删除</a>
+			
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="feedbackEdit()">回复</a>
+		</div>
+	</div>
+	
+	<div id="feedback_info" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_feedback" action="" method="post">
+		<table cellpadding="5">
+          <tr>
+	        <td>内容：</td><td><input name="feedbackContent" class="easyui-textbox" data-options="required:true,multiline:true" style="width:200px;height:150px" value=""></input> </td>
+	      </tr>
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="sub_Form('ff_feedback')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('ff_feedback')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form>
+	</div>
+	
+	<div id="feedback_re" class="easyui-window"  style="width:400px;height:300px"   
+	        data-options="iconCls:'icon-save',modal:true,closed:true,minimizable:false">
+	  <form id="ff_re"   method="post" >
+		<table cellpadding="5">
+         <input type="hidden"  name="id" value=""/>
+	      <tr>
+	        <td>回复内容：</td><td><input name="responsecontent" class="easyui-textbox" data-options="required:true,multiline:true" style="width:200px;height:150px" value=""></input> </td>
+	      </tr>
+	      <tr><td>  
+	        <div style="text-align:center;padding:5px">
+	         <a href="javascript:void(0)" class="easyui-linkbutton" onclick="sub_Form('ff_re')">提交</a>
+	            <a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm('baby_img')">清空</a>
+	        </div>
+	        </td>
+	      </tr>
+	      </table>
+		</form> 
+	</div>
+	
+	

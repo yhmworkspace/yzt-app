@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztLearningcenterMapper">
+	<resultMap id="BaseResultMap" type="com.yzt.app.model.YztLearningcenter">
+		<!-- WARNING - @mbggenerated -->
+		<id column="id" jdbcType="VARCHAR" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="yzt_learningcenter_id" jdbcType="VARCHAR"
+			property="yztLearningcenterId" />
+		<result column="branch_url" jdbcType="VARCHAR" property="branchUrl" />
+		<result column="branch_count" jdbcType="INTEGER" property="branchCount" />
+		<result column="learningcenter_url" jdbcType="VARCHAR"
+			property="learningcenterUrl" />
+		<result column="branch_name" jdbcType="VARCHAR" property="branchName" />
+		<result column="consult_phone" jdbcType="VARCHAR" property="consultPhone" />
+		<result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
+		<result column="business_time" jdbcType="VARCHAR" property="businessTime" />
+		<result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+		<result column="geographic_position" jdbcType="VARCHAR"
+			property="geographicPosition" />
+		<result column="province" jdbcType="VARCHAR" property="province" />
+		<result column="city" jdbcType="VARCHAR" property="city" />
+		<result column="district" jdbcType="VARCHAR" property="district" />
+		<result column="street" jdbcType="VARCHAR" property="street" />
+		<result column="postcode" jdbcType="VARCHAR" property="postcode" />
+		<result column="building" jdbcType="VARCHAR" property="building" />
+		<result column="longitude" jdbcType="VARCHAR" property="longitude" />
+		<result column="latitude" jdbcType="VARCHAR" property="latitude" />
+		<result column="businiss_circle" jdbcType="VARCHAR" property="businissCircle" />
+		<result column="min_age" jdbcType="INTEGER" property="minAge" />
+		<result column="max_age" jdbcType="INTEGER" property="maxAge" />
+		<result column="edu_type" jdbcType="VARCHAR" property="eduType" />
+		<result column="view_count" jdbcType="INTEGER" property="viewCount" />
+		<result column="weight" jdbcType="INTEGER" property="weight" />
+		<result column="pic_count" jdbcType="INTEGER" property="picCount" />
+		<result column="video_count" jdbcType="INTEGER" property="videoCount" />
+		<result column="course_count" jdbcType="INTEGER" property="courseCount" />
+		<result column="status" jdbcType="INTEGER" property="status" />
+		<result column="learningcenter_type" jdbcType="INTEGER"
+			property="learningcenterType" />
+		<result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+		<result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+		<result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+		<result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+		<result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+		<result column="introduction" jdbcType="LONGVARCHAR" property="introduction" />
+		<result column="distance" jdbcType="DOUBLE" property="distance" />
+		<result column="comments" jdbcType="DOUBLE" property="comments" />
+		<result column="comments_count" jdbcType="INTEGER" property="commentsCount" />
+
+		<result column="commodity_count" jdbcType="INTEGER" property="commodityCount" />
+		<result column="img_url" jdbcType="VARCHAR" property="imgUrl" />
+		<result column="tv_videourl" jdbcType="VARCHAR" property="tvVideourl" />
+		<result column="colleted_Count" jdbcType="VARCHAR" property="colletedCount" />
+		
+
+	</resultMap>
+
+	<!-- where 条件 -->
+	<sql id="where">
+		where 1=1
+	</sql>
+	<sql id="andOtherAll">
+		<trim suffixOverrides=",">
+			<if test="id">
+				and id = #{id}
+			</if>
+			<if test="city">
+				and city like concat('%',#{city},'%')
+			</if>
+			<if test="edu_type">
+				and edu_Type like concat('%',#{edu_Type},'%')
+			</if>
+			<if test="min_age">
+				and min_age &gt;= #{min_age}
+			</if>
+			<if test="max_age">
+				and max_age &lt;= #{max_age}
+			</if>
+
+
+		</trim>
+
+	</sql>
+
+	<select id="learningListCount" parameterType="java.util.Map"
+		resultType="Map">
+		select id from yzt_learningcenter where id in
+		(
+		select id from (
+		select id, concat(name,branch_name,city,edu_type) as content from
+		yzt_learningcenter
+		where city like concat('%',#{city},'%') and length(longitude)>2 and
+		length(latitude)>2
+		)
+		a where a.content like concat('%',#{keyword},'%')
+		)
+
+	</select>
+
+	<select id="learningList" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		id,name,yzt_learningcenter_id,businiss_circle,longitude,latitude,logo_url,img_url,
+		comments,comments_count,
+		pic_count,video_count,consult_phone,contact_phone,commodity_count,
+		tv_picurl,tv_videourl
+		from yzt_learningcenter where id in
+		(
+		select id from (
+		select id, concat(name,branch_name,city,edu_type) as content from
+		yzt_learningcenter
+		where city like concat('%',#{city},'%') and length(longitude)>2 and
+		length(latitude)>2
+		)
+		a where a.content like concat('%',#{keyword},'%')
+		)
+		limit
+		${limitstart},${limitrows}
+	</select>
+
+	<select id="learningListSelectCount" resultType="java.lang.Integer"
+		parameterType="java.util.Map">
+		select count(1) from yzt_learningcenter
+		<include refid="where" />
+		<include refid="andOtherAll" />
+		and length(longitude)>2 and length(latitude)>2
+	</select>
+	<select id="learningListSelect" parameterType="java.util.Map"
+		resultMap="BaseResultMap">
+		select
+		id,name,yzt_learningcenter_id,businiss_circle,longitude,latitude,logo_url,img_url,
+		comments,comments_count,
+		pic_count,video_count,consult_phone,contact_phone,commodity_count,
+		tv_picurl,tv_videourl from yzt_learningcenter
+		<include refid="where" />
+		<include refid="andOtherAll" />
+		and length(longitude)>2 and length(latitude)>2
+	</select>
+
+
+	<select id="selectByIds" parameterType="java.lang.String"
+		resultMap="BaseResultMap">
+		select * from yzt_learningcenter where id in (${ids})
+	</select>
+
+	<!-- 修改,SQL更新 -->
+	<update id="updateBySql" parameterType="java.lang.String">
+		update yzt_learningcenter ${sql}
+	</update>
+
+
+</mapper>

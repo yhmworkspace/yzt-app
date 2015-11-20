@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<base href="${BASE_PATH}">
+<link rel="stylesheet" type="text/css" href="static/local/css/yzt.css">
+<link rel="stylesheet" type="text/css" href="static/easyui/themes/gray/easyui.css">
+<link rel="stylesheet" type="text/css" href="static/easyui/themes/icon.css">
+<script type="text/javascript" src="static/easyui/jquery.min.js"></script>
+<script type="text/javascript" src="static/easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="static/easyui/locale/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="static/easyui/datagrid-filter.js"></script>
+<script type="text/javascript" src="static/local/js/yzt.js"></script>
+
+<link rel="stylesheet" href="static/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" href="static/kindeditor/plugins/code/prettify.css" />
+<script charset="utf-8" src="static/kindeditor/kindeditor.js"></script>
+<script charset="utf-8" src="static/kindeditor/lang/zh_CN.js"></script>
+<script charset="utf-8" src="static/kindeditor/plugins/code/prettify.js"></script>
+<script type="text/javascript">
+$(function(){
+	KindEditor.ready(function(K) {
+		var editor1 = K.create('textarea[name="introduction"]', {
+			cssPath : '${BASE_PATH}static/kindeditor/plugins/code/prettify.css',
+			uploadJson : 'system/choicenesscontent/upload',
+			fileManagerJson : '',
+			allowFileManager : true,
+			afterCreate : function() {
+				
+				var self = this;
+				K.ctrl(document, 13, function() {
+					self.sync();
+					document.forms['archiveinfo'].submit();
+				});
+				K.ctrl(self.edit.doc, 13, function() {
+					self.sync();
+					document.forms['archiveinfo'].submit();
+				});
+				
+			}
+		});
+		prettyPrint();
+	});
+});
+
+
+function saveJxnr(){
+	$('#archiveinfo').submit();
+	console.info('text=='+$('#content1').text());
+	console.info('val=='+$('#content1').val());
+	console.info('html=='+$('#content1').html());
+	//alert($('#introduction').text());
+	//$('#archiveinfo').submit();
+	/*
+	
+	$('#archiveinfo').form('submit',{
+	    url:"admin/jxnr/save",
+	    onSubmit: function(){
+	    	return $(this).form('validate');
+	    	//$.messager.alert("提示",$('#id').val());
+	    	//if($('#is_sequence').val()=='1' && updn=='up'){
+	    		//$.messager.alert("提示","已经是第一个");
+	    		//return false;
+	    	//}
+	    	//param.p1 = updn;
+	    	
+	    },
+	    success: function(rs){
+	    	//console.info(rs);
+	    	var rs = eval('(' + rs + ')');
+	    	
+	    	//window.location.href="admin/jxnr/view/"+rs.obj.id;
+	    }
+	});
+	*/
+}
+
+</script>
+</head>
+<body>
+
+<div class="easyui-layout" data-options="fit:true" style="">
+<form id="archiveinfo" name="archiveinfo" method="post" action="system/choicenesscontent/save"> 	
+
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+  		<input type="hidden" name="id" value="${archive_id}" />
+     <table cellpadding="5"  class="in-tb margin-top5" >
+     			<tr>
+                    <td class="in-lab" width="100px">精选内容id:</td>
+                    <td class="in-ctt" ><input name="choicenesscontentId" class="easyui-textbox" data-options="required:true" value="${jxnr.choicenesscontentId ?!''}" style=""></input></td>
+                	<td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"><input name="weight" class="easyui-textbox" data-options="required:true" value="${jxnr.weight ?!''}"></input></td>
+                
+                </tr>
+                <tr>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt" colspan="3"><input name="maintitle" class="easyui-textbox" data-options="required:true" value="${jxnr.maintitle ?!''}" style="width:90%;height:30px"></input></td>
+                </tr>
+                <tr>
+                	<td  class="in-lab" width="100px">网址:</td>
+                    <td class="in-ctt" colspan="3"><input name="logoUrl" class="easyui-textbox" data-options="required:true" value="${jxnr.logoUrl ?!''}"></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">联系电话:</td>
+                    <td class="in-ctt" ><input name="contactPhone" class="easyui-textbox" data-options="required:true" value="${jxnr.contactPhone ?!''}" style="width:400px"></input>&nbsp;多个以分号隔开</td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">营业时间:</td>
+                    <td class="in-ctt" colspan="3"><input name="businessTime" class="easyui-datebox" data-options="" value="${jxnr.businessTime ?!''}"></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">地理位置:</td>
+                    <td class="in-ctt" colspan="3">
+	                    <input id="province" name="province" value="${jxnr.province ?!''}" class="easyui-combobox" style="width:70px;" data-options="prompt:'省份',    
+						        valueField: 'dicCode',    
+						        textField: 'dicName',    
+						        url: 'system/dictionary/list/2',    
+						        onSelect: function(rec){    
+						            var url = 'system/dictionary/list/'+rec.id;    
+						            $('#cc2').combobox('reload', url);    
+						        }" />   
+						<input id="cc2" name="city" value="${jxnr.city ?!''}" class="easyui-combobox" style="width:70px;" data-options="prompt:'城市',valueField:'dicCode',textField:'dicName',
+								onSelect: function(rec){    
+						            var url = 'system/dictionary/list/'+rec.id;    
+						            $('#cc3').combobox('reload', url);    
+						        }" />
+	                    <input id="cc3" name="district" value="${jxnr.district ?!''}" class="easyui-combobox" style="width:100px;" data-options="prompt:'区县',valueField:'dicCode',textField:'dicName',
+	                    		onSelect: function(rec){    
+						            var url = 'system/dictionary/list/'+rec.id;    
+						            $('#cc4').combobox('reload', url);    
+						        }" />
+	                    <input id="cc4" name="businissCircle" value="${jxnr.businissCircle ?!''}" class="easyui-combobox" style="width:100px;" data-options="prompt:'商圈',valueField:'dicCode',textField:'dicName'"/>
+	                    <input id="cc5" name="building" value="${jxnr.building ?!''}" class="easyui-textbox" style="width:150px;" data-options="prompt:'写字楼'" />
+	                    <input name="geographicPosition" value="${jxnr.geographicPosition ?!''}" class="easyui-textbox" style="width:300px" data-options="prompt:'详细地址',onChange:getLng_Lat"></input>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td class="in-lab" >经度:</td>
+                    <td class="in-ctt"><input id="longitude" name="longitude" value="${jxnr.longitude ?!''}" class="easyui-textbox" data-options="required:true"></input></td>
+                    <td class="in-lab">纬度:</td>
+                    <td class="in-ctt"><input id="latitude" name="latitude" value="${jxnr.latitude ?!''}" class="easyui-textbox" data-options="required:true"></input></td>
+                </tr>
+                <tr>
+                    <td class="in-lab">最低年龄:</td>
+                    <td class="in-ctt">
+                    	<select class="easyui-combobox" name="minAge" value="${jxnr.minAge ?!''}" style="width:100px;">
+					        <option value="0" #if(jxnr.minAge == 0) selected #end>0岁</option>
+					        <option value="1" #if(jxnr.minAge == 1) selected #end>1岁</option>
+					        <option value="2" #if(jxnr.minAge == 2) selected #end>2岁</option>
+					        <option value="3" #if(jxnr.minAge == 3) selected #end>3岁</option>
+					        <option value="4" #if(jxnr.minAge == 4) selected #end>4岁</option>
+					        <option value="5" #if(jxnr.minAge == 5) selected #end>5岁</option>
+					        <option value="6" #if(jxnr.minAge == 6) selected #end>6岁</option>
+					        <option value="7" #if(jxnr.minAge == 7) selected #end>7岁</option>
+					        <option value="8" #if(jxnr.minAge == 8) selected #end>8岁</option>
+					        <option value="9" #if(jxnr.minAge == 9) selected #end>9岁</option>
+					        <option value="10" #if(jxnr.minAge == 10) selected #end>10岁</option>
+					        <option value="11" #if(jxnr.minAge == 11) selected #end>11岁</option>
+					        <option value="12" #if(jxnr.minAge == 12) selected #end>12岁</option>
+					        <option value="13" #if(jxnr.minAge == 13) selected #end>13岁</option>
+					        <option value="14" #if(jxnr.minAge == 14) selected #end>14岁</option>
+					        <option value="15" #if(jxnr.minAge == 15) selected #end>15岁</option>
+					        <option value="16" #if(jxnr.minAge == 16) selected #end>16岁</option>
+					        <option value="17" #if(jxnr.minAge == 17) selected #end>17岁</option>
+					        <option value="18" #if(jxnr.minAge == 18) selected #end>18岁</option>
+					     </select>
+                    </td>
+                    <td class="in-lab">最高年龄:</td>
+                    <td class="in-ctt">
+                    	<select class="easyui-combobox" name="maxAge" value="${jxnr.maxAge ?!''}" style="width:100px;">
+					        <option value="0" #if(jxnr.maxAge == 0) selected #end>0岁</option>
+					        <option value="1" #if(jxnr.maxAge == 1) selected #end>1岁</option>
+					        <option value="2" #if(jxnr.maxAge == 2) selected #end>2岁</option>
+					        <option value="3" #if(jxnr.maxAge == 3) selected #end>3岁</option>
+					        <option value="4" #if(jxnr.maxAge == 4) selected #end>4岁</option>
+					        <option value="5" #if(jxnr.maxAge == 5) selected #end>5岁</option>
+					        <option value="6" #if(jxnr.maxAge == 6) selected #end>6岁</option>
+					        <option value="7" #if(jxnr.maxAge == 7) selected #end>7岁</option>
+					        <option value="8" #if(jxnr.maxAge == 8) selected #end>8岁</option>
+					        <option value="9" #if(jxnr.maxAge == 9) selected #end>9岁</option>
+					        <option value="10" #if(jxnr.maxAge == 10) selected #end>10岁</option>
+					        <option value="11" #if(jxnr.maxAge == 11) selected #end>11岁</option>
+					        <option value="12" #if(jxnr.maxAge == 12) selected #end>12岁</option>
+					        <option value="13" #if(jxnr.maxAge == 13) selected #end>13岁</option>
+					        <option value="14" #if(jxnr.maxAge == 14) selected #end>14岁</option>
+					        <option value="15" #if(jxnr.maxAge == 15) selected #end>15岁</option>
+					        <option value="16" #if(jxnr.maxAge == 16) selected #end>16岁</option>
+					        <option value="17" #if(jxnr.maxAge == 17) selected #end>17岁</option>
+					        <option value="18" #if(jxnr.maxAge == 18) selected #end>18岁</option>
+					     </select>
+                    </td>
+                </tr>
+                
+                 <tr>
+                    <td class="in-lab">分类:</td>
+                    <td class="in-ctt" colspan="3"><input id="edu_type" name="eduType"  value="${jxnr.eduType ?!''}" style="width:250px"><br/>
+                    	<table id="edu_type_tab" class="in-tb margin-top5" onclick="javascript:GetZone();">
+                    		<tr>
+                    		#for(YztDictionary dic : DicList)
+                    			
+                    			<td><input name="edu_type" type="checkbox" value="${dic.dicName}"/>${dic.dicName}</td>
+                    		#if(for.index % 6 ==0)
+                    			<tr></tr>
+                    			#end
+                    		#end
+                    		</tr>
+                    		
+                    	</table>
+                    
+                    </td>
+                </tr>
+                <tr>
+                <!--${jxnr.introduction ?!''} 换成 URL  -->
+                    <td class="in-lab">内容编辑:</td>
+                    <td class="in-ctt" colspan="3">
+                    	<textarea  name="introduction" cols="100" rows="8" style="width:700px;height:300px;visibility:hidden;">${introduction ?!''}</textarea>
+                    </td>
+                </tr>
+                <tr><td></td></tr>
+        </table> 
+
+</div>
+<div data-options="region:'south',border:false" style="text-align:right;padding:5px 5px 5px;">
+		<input  type="submit" name="button" height="42px" value="提交内容" />
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="window.close();">关闭</a>
+	</div>
+</form> 
+</div> 
+
+<script type="text/javascript">
+#if(archive_id != null)
+	//$('#archiveinfo').form('load', 'admin/jxnr/infoJson/${archive_id}');
+#end
+function GetZone() {  
+  //console.info("点击");
+            //获取input所在div的对象  
+            var ob_tab = document.getElementById("edu_type_tab");  
+  
+            //获取div中所用的IUPUT控件集合  
+            var col = ob_tab.getElementsByTagName("INPUT");  
+            //定义一个变量并初始化为空  
+            var str = "";  
+            var count = 0;  
+  
+            //循环遍历，判断INPUT是否选中  
+            for (var i = 0 ; i < col.length; i++) {  
+                if (col[i].checked == true) {  
+                    count++;  
+                    if (count == 1) {//当是一个值得时候，直接把选中的值赋给字符串  
+                        str += col[i].value;  
+                    }  
+                    else {  
+                        str += ";" + col[i].value;//多个被选中的时候，需要把选定的值不断的拼接  
+                    }  
+                    //str+=col[i].value+"/";  
+                }  
+            }  
+            //console.info(str);
+            document.getElementById("edu_type").value = str;//把选择完后的字符串给一个隐藏空间以便向后台传送  
+            //$('#zjzx.edu_type').textbox('setValue',str);
+            //$('#zjzx.edu_type').textbox('setText',str);
+            //console.info( $('#zjzx.edu_type').textbox('getValue'));
+        }  
+        
+        #--
+        
+        var list = NowLivecountry.split('/');//把数据给拆分并放到list里面  
+        
+        
+        //获取input所在div的对象  
+        var ob = document.getElementById("div1");  
+
+        //获取div中所用的IUPUT控件集合  
+        var col = div1.getElementsByTagName("INPUT");  
+
+        var str = "";  
+        var count = 0;  
+        //通过页面上的循环获取的值与后台传送过来放到list中的数据一一比对，如果和界面的内容一致的就可以选择，让其打上对勾  
+        for (var obj in list) {  
+            for (i = 0; i < col.length; i++) {//界面上input中的值  
+
+                for (j = 0; j <= list.length; j++)//list中的值  
+                {  
+
+                    if (col[i].value == list[j])//比较是否内容相等，如果一致就在界面上打上对勾  
+                    {  
+                        col[i].checked = true//是combox选中，打上对勾  
+
+                    }  
+                }  
+            }  
+
+
+
+        }  
+        
+        --#
+</script>
+</body>
+</html>

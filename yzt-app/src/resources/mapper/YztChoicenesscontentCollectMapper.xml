@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztChoicenesscontentCollectMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztChoicenesscontentCollect">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="yzt_user_id" jdbcType="VARCHAR" property="yztUserId" />
+    <result column="yzt_choicenesscontent_id" jdbcType="VARCHAR" property="yztChoicenesscontentId" />
+    <result column="collect" jdbcType="INTEGER" property="collect" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="yzt_choicenesscontent_maintitle" jdbcType="VARCHAR" property="yztChoicenesscontentMaintitle" />
+    <result column="yzt_userinfo_nickname" jdbcType="VARCHAR" property="yztUserinfoNickname" />
+    <result column="yzt_userinfo_account" jdbcType="INTEGER" property="yztUserinfoAccount" />
+    <result column="yzt_choicenesscontent_start_time" jdbcType="INTEGER" property="yztChoicenesscontentStartTime" />
+    <result column="yzt_choicenesscontent_end_time" jdbcType="INTEGER" property="yztChoicenesscontentEndTime" />
+    
+  </resultMap>
+ 
+  <select id="selectByIds" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from yzt_choicenesscontent_collect where id in (${ids}) 
+  </select>
+  <!-- 修改,SQL更新 -->
+	<update id="updateBySql" parameterType="java.lang.String">
+		update yzt_choicenesscontent_collect ${sql}
+	</update>
+  
+  	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from yzt_userinfo where id='${value}'
+	</select>
+</mapper>

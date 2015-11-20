@@ -1,0 +1,96 @@
+
+<div class="easyui-layout" data-options="fit:true" style="">
+	<div data-options="region:'north',border:false" style="text-align:left;padding:5px 5px 5px;">
+			#if(learingcenter.status == 1)
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-edit'" href="javascript:void(0)" onclick="archiveModify('learningcenter','${archive_id}');">修改</a>&nbsp;
+			#end
+			#--
+			<a class="easyui-linkbutton" data-options="" href="javascript:void(0)" onclick="archiveLog('learningcenter','${archive_id}');">修改记录</a>&nbsp;
+			--#
+			<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" href="javascript:void(0)" onclick="archiveClose()">关闭</a>
+	</div>
+
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+	
+	<form id="archiveinfo" method="post" enctype="multipart/form-data">   
+     <table cellpadding="5"  class="in-tb margin-top5" >
+     			<tr>
+                    <td  class="in-lab" width="100px">早教中心id:</td>
+                    <td class="in-ctt" >${learingcenter.yztLearningcenterId}</td>
+                     <td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt">${learingcenter.weight}</td>
+                <tr>
+                    <td  class="in-lab" width="100px">早教中心名称:</td>
+                    <td class="in-ctt">${learingcenter.name}</td>
+                    <td  class="in-lab" width="100px">分店名称:</td>
+                    <td class="in-ctt">${learingcenter.branchName}</td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">预约电话:</td>
+                    <td class="in-ctt" >${learingcenter.contactPhone}</td>
+                	<td class="in-lab" width="100px">咨询电话:</td>
+                    <td class="in-ctt" >${learingcenter.consultPhone}</td>
+                
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">营业时间:</td>
+                    <td class="in-ctt" colspan="3">${learingcenter.businessTime}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">网址:</td>
+                    <td class="in-ctt" colspan="3">${learingcenter.branchUrl}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">早教中心logo:</td>
+                    <td class="in-ctt" colspan="3"><img alt="" src="${learingcenter.logoUrl}" height="100" width="100"></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">列表图片:</td>
+                    <td class="in-ctt" colspan="3"><img alt="" src="${learingcenter.imgUrl}" height="100" width="100"></td>
+                </tr>
+                <tr>
+                    <td class="in-lab" width="100px">地理位置:</td>
+                    <td class="in-ctt" colspan="3">${learingcenter.province} ${learingcenter.city} ${learingcenter.district}  
+                    				${learingcenter.geographicPosition}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="in-lab" >商圈:</td>
+                    <td class="in-ctt">${learingcenter.businissCircle}</td>
+                    <td class="in-lab">建筑物:</td>
+                    <td class="in-ctt">${learingcenter.building}</td>
+                </tr>
+                <tr>
+                    <td class="in-lab" >经度:</td>
+                    <td class="in-ctt">${learingcenter.longitude}</td>
+                    <td class="in-lab">纬度:</td>
+                    <td class="in-ctt">${learingcenter.latitude}</td>
+                </tr>
+                <tr>
+                    <td class="in-lab">最低年龄:</td>
+                    <td class="in-ctt">${learingcenter.minAge}
+                    </td>
+                    <td class="in-lab">最高年龄:</td>
+                    <td class="in-ctt">${learingcenter.maxAge}
+                    </td>
+                </tr>
+                
+                 <tr>
+                    <td class="in-lab">分类:</td>
+                    <td class="in-ctt" colspan="3">${learingcenter.eduType}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="in-lab">简介:</td>
+                    <td class="in-ctt" colspan="3">${learingcenter.introduction}</td>
+                </tr>
+        </table> 
+		</form> 
+	</div>
+</div>
+<div id="archiveview_dialog"></div> 
+
+<script type="text/javascript">
+</script>

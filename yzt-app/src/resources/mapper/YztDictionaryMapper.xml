@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztDictionaryMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztDictionary">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="dic_name" jdbcType="VARCHAR" property="dicName" />
+    <result column="dic_code" jdbcType="VARCHAR" property="dicCode" />
+    <result column="dic_sequence" jdbcType="INTEGER" property="dicSequence" />
+    <result column="dic_type" jdbcType="INTEGER" property="dicType" />
+    <result column="dic_pid" jdbcType="VARCHAR" property="dicPid" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+  </resultMap>
+  <!-- 修改,SQL更新 -->
+	<update id="updateBySql" parameterType="java.lang.String" >
+		 update yzt_dictionary  ${sql}
+	</update>
+</mapper>

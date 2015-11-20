@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztLearningcenterVideoMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztLearningcenterVideo">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="yzt_learningcenter_id" jdbcType="VARCHAR" property="yztLearningcenterId" />
+    <result column="file_name" jdbcType="VARCHAR" property="fileName" />
+    <result column="file_type" jdbcType="VARCHAR" property="fileType" />
+    <result column="file_path" jdbcType="VARCHAR" property="filePath" />
+    <result column="file_size" jdbcType="INTEGER" property="fileSize" />
+    <result column="sequence" jdbcType="INTEGER" property="sequence" />
+    <result column="file_contenttype" jdbcType="VARCHAR" property="fileContenttype" />
+    <result column="course_id" jdbcType="VARCHAR" property="courseId" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="ispic" jdbcType="INTEGER" property="ispic" />
+  <!--   <result column="videoid" jdbcType="VARCHAR" property="videoId" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    <result column="checked" jdbcType="INTEGER" property="checked" /> -->
+    
+  </resultMap>
+  
+  <!-- <update id="updateBySql" parameterType="java.lang.String" >
+  		update videoid ${value}
+  </update> -->
+  <!-- 修改,SQL更新 -->
+	<update id="updateBySql" parameterType="java.lang.String"  >
+		 update yzt_learningcenter_video  ${sql}
+	</update>
+</mapper>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yzt.app.mapper.YztChoicenesscontentMapper">
+  <resultMap id="BaseResultMap" type="com.yzt.app.model.YztChoicenesscontent">
+    <!--
+      WARNING - @mbggenerated
+    -->
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="choicenesscontent_id" jdbcType="VARCHAR" property="choicenesscontentId" />
+    <result column="maintitle" jdbcType="VARCHAR" property="maintitle" />
+    <result column="contact_phone" jdbcType="VARCHAR" property="contactPhone" />
+    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
+    <result column="start_time" jdbcType="VARCHAR" property="startTime" />
+    <result column="end_time" jdbcType="VARCHAR" property="endTime" />
+    <result column="geographic_position" jdbcType="VARCHAR" property="geographicPosition" />
+    <result column="province" jdbcType="VARCHAR" property="province" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="district" jdbcType="VARCHAR" property="district" />
+    <result column="street" jdbcType="VARCHAR" property="street" />
+    <result column="building" jdbcType="VARCHAR" property="building" />
+    <result column="longitude" jdbcType="VARCHAR" property="longitude" />
+    <result column="latitude" jdbcType="VARCHAR" property="latitude" />
+    <result column="businiss_circle" jdbcType="VARCHAR" property="businissCircle" />
+    <result column="business_time" jdbcType="VARCHAR" property="businessTime" />
+    
+    <result column="min_age" jdbcType="INTEGER" property="minAge" />
+    <result column="max_age" jdbcType="INTEGER" property="maxAge" />
+    <result column="edu_type" jdbcType="VARCHAR" property="eduType" />
+    <result column="view_count" jdbcType="INTEGER" property="viewCount" />
+    <result column="weight" jdbcType="INTEGER" property="weight" />
+    <result column="pic_count" jdbcType="INTEGER" property="picCount" />
+    <result column="createtime" jdbcType="TIMESTAMP" property="createtime" />
+    <result column="modfiytime" jdbcType="TIMESTAMP" property="modfiytime" />
+    <result column="create_userid" jdbcType="VARCHAR" property="createUserid" />
+    <result column="modify_userid" jdbcType="VARCHAR" property="modifyUserid" />
+    <result column="isdelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="introduction" jdbcType="LONGVARCHAR" property="introduction" />
+    
+    <result column="comments" jdbcType="DOUBLE" property="comments" />
+    <result column="comments_count" jdbcType="INTEGER" property="commentsCount" />
+    <result column="collected_count" jdbcType="INTEGER" property="collectedCount" />
+    <result column="introduction_html_url" jdbcType="VARCHAR" property="introductionHtmlUrl" />
+  </resultMap>
+  
+  <!-- 修改,SQL更新 -->
+	<update id="updateBySql" parameterType="java.lang.String" >
+		 update yzt_choicenesscontent ${sql}
+	</update>
+	
+	<select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select * from yzt_choicenesscontent where id='${value}'
+	</select>
+	
+</mapper>

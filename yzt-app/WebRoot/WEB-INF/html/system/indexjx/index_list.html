@@ -1,0 +1,302 @@
+
+
+
+<div id="toolbars"> 
+	<form id="indexChoicenessSearchForm"  method="post" style="padding: 5px;">
+		权重:   <input  id="weight" name="weight" class="easyui-validatebox">
+		标题:   <input  id="maintitle" name="maintitle" class="easyui-validatebox">
+	    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-search" onclick="indexChoicenessSearch_from()">搜索</a>  
+	    <a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-add" plain="true" onclick="indexChoiceness_addObj()">添加</a> 
+  	</form> 
+</div> 
+
+<div id="indexChoiceness_mmData" class="easyui-menu" style="width:120px;">
+	<div onclick="chodetail_obj()" data-options="ocpmCls:'icon-search'">查看详情</div>
+    <div onclick="indexChoiceness_editObj()" data-options="iconCls:'icon-edit'">编辑</div>
+    <div onclick="indexChoiceness_delObj()" data-options="iconCls:'icon-remove'">删除</div>  
+</div>
+ <!-- queryParams: form2Json('indexChoicenessSearchFrom'), -->
+<div id="indexChoiceness_grid" class="easyui-datagrid" data-options="
+		toolbar: '#toolbars',
+		rownumbers: true,
+        animate: true,
+        title:'首页精选推荐列表',
+        collapsible: true,
+        fitColumns: true,
+        pagination:true,
+        singleSelect:true,
+        sortName:'id',
+        sortOrder:'desc',
+        url: 'system/indexchoicenesscontent/list',
+        loader: function(param,success,error){
+        	var that = $(this);  
+		    var opts = that.datagrid('options');  
+		    if (!opts.url) {  
+		        return false;  
+		    }
+			var searchParam = $('#indexChoicenessSearchForm').form('getData');
+	   		searchParam.weight = $('#weight').val();
+	   		searchParam.maintitle = $('#maintitle').val();
+	   		param.others = searchParam;
+		   	$.toPost(opts.url, param, success, error);
+        },
+        columns: [[
+            {field:'id',title:'id',width:15}
+            ,{field:'maintitle',title:'标题',width:7}
+            ,{field:'weight',title:'权重',width:7}
+            ,{field:'yztChoicenesscontentId',title:'精选信息id',width:15}
+            ,{field:'startTime',title:'生效时间',width:7}
+			,{field:'endTime',title:'失效时间',width:7}
+			,{field:'createtime',title:'创建时间',width:20,formatter: function (value, row, index) {
+                     return formatDate(value);
+                 }
+           }
+
+        ]]
+		,onRowContextMenu: function(e, rowIndex, rowData){
+            e.preventDefault();
+            $(this).datagrid('selectRow', rowIndex);
+            $('#indexChoiceness_mmData').menu('show',{
+                left: e.pageX,
+                top: e.pageY
+            });
+        },
+        onSelect: function(rowIndex, rowData){
+            
+        }
+"></div>
+
+<div id="chodetail_Dlg" class="easyui-dialog" data-options="
+		width: dlg_width,
+		height: dlg_height,
+		left: dlg_left,
+		top:dlg_top,
+		closed:true,
+		modal:true,
+		resizable:true,
+		buttons:[{
+			text:'取消',
+			handler:function(){
+				$('#chodetail_Dlg').dialog('close');
+			}
+		}]
+">
+<div class="easyui-layout" data-options="fit:true" style="">
+<form id="chodetail_Form" name="archiveinfo" method="post" > 	
+
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+ 	
+     	<table cellpadding="5"  class="in-tb margin-top5" >
+     			<tr>
+                	<td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"><input name="weight" class="easyui-textbox"  disabled="disabled"></input></td>
+                
+                </tr>
+                <tr>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt" colspan="3"><input name="maintitle" class="easyui-textbox" disabled="disabled"></input></td>
+                </tr>
+                	<tr>
+                    <td class="in-lab" width="100px">精选信息id:</td>
+                    <td class="in-ctt" colspan="3"><input name="yztChoicenesscontentId" class="easyui-textbox"  style="width:400px" disabled="disabled"></input></td>
+                </tr>
+             
+                <tr>
+                    <td class="in-lab" width="100px">开始时间:</td>
+                    <td class="in-ctt" ><input name="startTime" class="easyui-textbox" disabled="disabled"></input></td>
+                	<td class="in-lab" width="100px">结束时间:</td>
+                	<td class="in-ctt" ><input name="endTime" class="easyui-textbox" disabled="disabled"></input></td>
+                </tr>
+         
+                <tr><td></td></tr>
+        </table> 
+
+</div>
+<input type="hidden" value="${path}" name="path" id="path">
+</form> 
+</div> 
+</div>
+
+
+<!-- ///////////////////////////////////////////////////////////////////////修改//////////////////////////////////////////////////////////////////////////////// -->
+<div id="indexChoiceness_editDlg" class="easyui-dialog" data-options="
+		width: dlg_width,
+		height: dlg_height,
+		left: dlg_left,
+		top:dlg_top,
+		closed:true,
+		modal:true,
+		resizable:true,
+		buttons:[{
+			text:'保存',
+			handler:function(){
+				indexChoiceness_save();
+			}
+		},{
+			text:'取消',
+			handler:function(){
+				$('#indexChoiceness_editDlg').dialog('close');
+			}
+		}]
+">
+<div class="easyui-layout" data-options="fit:true" style="">
+<form id="indexChoiceness_editForm" name="archiveinfo" method="post" > 	
+<input type="hidden" name="id" />
+	<div data-options="region:'center',border:true"  style="padding:10px;">
+	 		<table cellpadding="5"  class="in-tb margin-top5" >
+   			  	<tr>
+                    <td class="in-lab" width="100px">精选信息id:</td>
+                    <td class="in-ctt" colspan="3">
+                    	<input id="yztChoicenesscontentIds" name="yztChoicenesscontentId" class="easyui-textbox"  style="width:400px" ></input>
+                    	<input type="button" onclick="getChoicenessconten();" value="搜索">
+                   	</td>
+                </tr>
+                <tr>
+                	<td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"><input id="weightId" class="easyui-textbox" disabled="disabled" ></input></td>
+                
+                </tr>
+                <tr>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt" colspan="3"><input id="maintitleId"  class="easyui-textbox" disabled="disabled" style="width:90%;height:30px"></input></td>
+                </tr>
+                 <tr>
+                    <td class="in-lab" width="100px">开始时间:</td>
+                    <td class="in-ctt" ><input name="startTime" id="startTimeId" class="easyui-textbox" disabled="disabled"></input></td>
+                	<td class="in-lab" width="100px">结束时间:</td>
+                	<td class="in-ctt" ><input name="endTime" id="endTimeId" class="easyui-textbox" disabled="disabled"></input></td>
+                </tr>
+            </table>
+            <br/>
+            <br/>
+            <br/>
+     	<table cellpadding="5"  class="in-tb margin-top5" >
+      
+     			<tr>
+                	<td  class="in-lab" width="100px">权重:</td>
+                    <td class="in-ctt"><input name="weight" class="easyui-textbox" data-options="required:true" ></input></td>
+                
+                </tr>
+                <tr>
+                    <td  class="in-lab" width="100px">标题:</td>
+                    <td class="in-ctt" colspan="3"><input name="maintitle" class="easyui-textbox" data-options="required:true"  style="width:90%;height:30px"></input></td>
+                </tr>
+              <!--  <tr>
+                	<td class="in-lab" width="100px">上传图片:
+                		<td class="in-ctt" colspan="3"><input type="file" name="upload" id="upload" class="easyui-validatebox"></td>
+                	</td>
+                </tr> -->
+                <tr>
+                    <td class="in-lab" width="100px">开始时间:</td>
+                    <td class="in-ctt" ><input name="startTime" class="easyui-datebox" data-options="" ></input></td>
+                	<td class="in-lab" width="100px">结束时间:</td>
+                	<td class="in-ctt" ><input name="endTime" class="easyui-datebox" data-options="" ></input></td>
+                </tr>
+              
+             
+        </table> 
+
+</div>
+</form> 
+</div> 
+</div>
+
+
+<script type="text/javascript">
+function getChoicenessconten(){
+	var choId = $('#yztChoicenesscontentIds').val();
+	$.toPost("system/choicenesscontent/getChoicenessconten",{id:choId},function(data){
+			if(data.success){
+				$("#weightId").textbox('setValue',data.obj.weight);
+				$("#maintitleId").textbox('setValue',data.obj.maintitle);
+				$("#startTimeId").textbox('setValue',data.obj.startTime);
+				$("#endTimeId").textbox('setValue',data.obj.endTime);
+			
+			}else{
+				$.messager.alert('提示', "查询失败!");
+			}
+		},function(){
+			$.messager.alert('错误', "请求服务器失败!");
+		});
+}
+
+
+
+function indexChoiceness_save(){
+	if(!$('#indexChoiceness_editForm').form('validate')) return;
+	var form = $('#indexChoiceness_editForm').form('getData');
+	$.toPost("system/indexchoicenesscontent/save",form,function(data){
+		if(data.json.success){
+			$.messager.alert('提示',data.json.msg,'info');
+			$('#indexChoiceness_editDlg').dialog('close');
+			$('#indexChoiceness_grid').datagrid('reload');
+		}else{
+			$.messager.alert('提示',datajson.msg,'info');
+		}
+	});
+}
+
+function indexChoiceness_addObj(){
+ 	$('#indexChoiceness_editForm').form('clear');
+	$("#indexChoiceness_editDlg").dialog('open').dialog('setTitle','增加'); 
+	/* getEdu_type(); */
+}
+
+
+
+
+	 
+
+//编辑
+function indexChoiceness_editObj(){
+	kindEditor();
+	var row = $('#indexChoiceness_grid').datagrid('getSelected');
+	if(row){
+		$('#indexChoiceness_editForm').form('clear');
+		if(row.eduType!=""&&row.eduType!=null){
+			row.eduType = row.eduType.split(',');
+		}
+		$('#indexChoiceness_editForm').form('load',row);
+		$("#indexChoiceness_editDlg").dialog('open').dialog('setTitle','修改');
+	}
+}
+
+function chodetail_obj(){
+var row = $('#indexChoiceness_grid').datagrid('getSelected');
+	if(row){
+		$('#chodetail_Form').form('clear');
+		$('#chodetail_Form').form('load',row);
+		$("#chodetail_Dlg").dialog('open').dialog('setTitle','查看详情');
+	}
+}
+ 
+//删除
+function indexChoiceness_delObj(){
+	var row = $('#indexChoiceness_grid').datagrid('getSelected');
+	$.messager.confirm('确认','确认要删除所选列吗?',function(r){
+        if (r){
+			$.toPost("system/indexChoicenesscontent/del",{id:row.id},function(data){
+				if(data.success){
+					$.messager.alert('提示', "删除成功!");
+					$('#indexChoiceness_grid').datagrid('reload');
+				}else{
+					$.messager.alert('提示', "删除失败!");
+				}
+			},function(){
+				$.messager.alert('错误', "请求服务器失败!");
+			});
+        }
+    });
+}
+
+
+function indexChoicenessSearch_from(){
+    $('#indexChoiceness_grid').datagrid('reload',{pageNumber:1});
+}
+	
+
+
+
+
+
+</script>
